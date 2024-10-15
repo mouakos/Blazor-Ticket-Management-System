@@ -4,10 +4,11 @@
 @using Domain.Entities
 @using Domain.Interfaces
 @using Microsoft.AspNetCore.Identity
-@using TicketManagementUI.Components.Layout
 @inject SignInManager<User> SignInManager
 @inject IAccountService AccountService
 @inject NavigationManager NavigationManager
+
+@rendermode InteractiveServer
 
 <section class="vh-100">
     <div class="container-fluid h-custom">
@@ -19,6 +20,7 @@
                 <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
                     <p class="lead fw-normal mb-0 me-3">Sign in with Email</p>
                 </div>
+                <Alert @ref="m_Alert"/>
                 <EditForm Model="Input" method="post" FormName="Login" OnValidSubmit="HandleValidSubmit">
                     <DataAnnotationsValidator/>
                     <hr/>
@@ -46,6 +48,7 @@
 </section>
 
 @code {
+    private Alert? m_Alert;
     [SupplyParameterFromForm] private LoginInput Input { get; set; } = new();
 
     private async Task HandleValidSubmit()
@@ -54,12 +57,11 @@
         var verify = await AccountService.VerifyUser(Input.Email!, Input.Password!);
         if (!verify.IsSuccess)
         {
-            // Alert
+            m_Alert?.ShowFailed(verify.ErrorMessage!);
             return;
         }
 
-        await SignInManager.PasswordSignInAsync(verify.Value!, Input.Password!, Input.Remember, false);
-        NavigationManager.NavigateTo("/");
+        NavigationManager.NavigateTo($"processor/{verify.Value}/{Input.Password}/{Input.Remember}");
     }
 
     private class LoginInput
