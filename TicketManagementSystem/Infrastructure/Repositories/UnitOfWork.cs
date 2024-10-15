@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 
-public sealed class UnitOfWork(IdentityDbContext appDbContext) : IUnitOfWork
+public sealed class UnitOfWork(IdentityDbContext appDbContext, ITicketRepository ticketRepository) : IUnitOfWork
 {
     private Hashtable? m_Repositories;
 
@@ -13,6 +13,9 @@ public sealed class UnitOfWork(IdentityDbContext appDbContext) : IUnitOfWork
     {
         appDbContext.Dispose();
     }
+
+    /// <inheritdoc />
+    public ITicketRepository TicketRepository => ticketRepository;
 
     /// <inheritdoc />
     public IGenericRepository<TEntity> Repository<TEntity>() where TEntity : class

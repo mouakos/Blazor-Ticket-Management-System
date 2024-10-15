@@ -18,7 +18,7 @@ public class Ticket
     [ForeignKey(nameof(RaisedBy))] public User? User { get; set; }
 
     public int ProductId { get; set; }
-    [ForeignKey(nameof(ProductId))] public Product Product { get; set; }
+    [ForeignKey(nameof(ProductId))] public Product? Product { get; set; }
 
     public int CategoryId { get; set; }
     [ForeignKey(nameof(CategoryId))] public Category? Category { get; set; }
