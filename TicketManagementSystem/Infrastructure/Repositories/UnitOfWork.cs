@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 using Domain.Repositories;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Infrastructure.Data;
 
 namespace Infrastructure.Repositories;
 
-public sealed class UnitOfWork(IdentityDbContext appDbContext, ITicketRepository ticketRepository) : IUnitOfWork
+public sealed class UnitOfWork(AppDbContext appDbContext, ITicketRepository ticketRepository) : IUnitOfWork
 {
     private Hashtable? m_Repositories;
 
