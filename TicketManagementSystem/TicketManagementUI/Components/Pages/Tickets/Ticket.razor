@@ -1,0 +1,52 @@
+﻿@page "/ticket"
+<SectionContent SectionName="page-title">Ticket Management</SectionContent>
+@rendermode InteractiveServer
+
+@using Domain.DTOs.Requests
+@inject ITicketService TicketService
+<MudPopoverProvider />
+
+<div class="filter-panel">
+    Filter her
+</div>
+
+<MudDataGrid @ref="m_DataGrid" 
+             T="TicketResponse" SortMode="@SortMode.None" 
+             ServerData="ServerReload" >
+    <Columns>
+        <PropertyColumn Property="x => x.TicketIdView" Title="Ticket Id" />
+        <PropertyColumn Property="x => x.Summary" />
+        <PropertyColumn Property="x => x.Product" />
+        <PropertyColumn Property="x => x.Category" />
+        <PropertyColumn Property="x => x.Priority" />
+        <PropertyColumn Property="x => x.Status" />
+        <PropertyColumn Property="x => x.RaisedBy" Title="Raised By" />
+        <PropertyColumn Property="x => x.ExpectedDate" Title="Expected Date" Format="dd MMM yyyy" />
+        <PropertyColumn Property="x => x.CreatedDate" Title="Created Date" Format="dd MMM yyyy" />
+    </Columns>
+    <PagerContent>
+        <MudDataGridPager T="TicketResponse" />
+    </PagerContent>
+</MudDataGrid>
+
+@code {
+    MudDataGrid<TicketResponse>? m_DataGrid;
+
+    /// <summary>
+    /// Here we simulate getting the paged, filtered and ordered data from the server
+    /// </summary>
+    private async Task<GridData<TicketResponse>> ServerReload(GridState<TicketResponse> state)
+    {
+        IEnumerable<TicketResponse> tickets = TicketService.GetTickets(new TicketRequest());
+        await Task.Delay(300);
+        var totalItems = tickets.Count();
+        var pagedData = tickets.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
+        return new GridData<TicketResponse>
+            {
+                TotalItems = totalItems,
+                Items = pagedData
+            };
+    }
+
+   
+}
