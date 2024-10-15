@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 
+// Todo: Why IdentityDbContext instead of AppDbContext?
+// Todo: Use async methods?
+
 public class GenericRepository<T>(IdentityDbContext appDbContext) : IGenericRepository<T> where T : class
 {
     /// <inheritdoc />

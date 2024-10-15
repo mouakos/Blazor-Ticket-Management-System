@@ -1,4 +1,4 @@
-﻿@page "/processor/{username}/{password}/{rememberme:bool}"
+﻿@page "/processor/{payload}"
 
 @layout EmptyLayout
 
@@ -7,20 +7,21 @@
 
 @inject SignInManager<User> SignInManager
 @inject NavigationManager NavigationManager
+@inject EncryptionHelper<LoginDto> Encryption
+
 
 Sign In ...
 
 @code
 {
-    public string username { get; set; }
-    public string password  { get; set; }
-    public bool rememberme { get; set; }
-
+    [Parameter] public string? Payload { get; set; }
 
     /// <inheritdoc />
     protected override async Task OnInitializedAsync()
     {
-        await SignInManager.PasswordSignInAsync(username, password, rememberme, false);
+        var loginDto = Encryption.Decode(Payload);
+
+        await SignInManager.PasswordSignInAsync(loginDto.UserName, loginDto.Password, loginDto.RememberMe, false);
         NavigationManager.NavigateTo("/");
     }
 
