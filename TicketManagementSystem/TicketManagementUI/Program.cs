@@ -2,9 +2,9 @@ using Domain.Entities;
 using Domain.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.Services;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using MudBlazor.Services;
 using TicketManagementUI.Components;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,7 +12,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
-
 
 /* Authentication */
 builder.Services.AddAuthorization();
@@ -38,6 +37,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 /* Services */
 builder.Services.AddScoped<IAccountService, AccountService>();
+
+/*MudBlazor*/
+builder.Services.AddMudServices();
 
 var app = builder.Build();
 
