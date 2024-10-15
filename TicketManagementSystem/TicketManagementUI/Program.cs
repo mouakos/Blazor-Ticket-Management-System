@@ -38,6 +38,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 /* Services */
 builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<ICriteriaService, CriteriaService>();
 builder.Services.AddScoped(typeof(EncryptionHelper<>));
 
 
