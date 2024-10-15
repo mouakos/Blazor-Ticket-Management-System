@@ -9,7 +9,7 @@ using TicketManagementUI.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// AddAsync services to the container.
+// Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 

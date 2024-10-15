@@ -1,11 +1,10 @@
 ﻿using System.Collections;
 using Domain.Repositories;
-using Infrastructure.Data;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 
-public class UnitOfWork(AppDbContext appDbContext) : IUnitOfWork
+public sealed class UnitOfWork(IdentityDbContext appDbContext) : IUnitOfWork
 {
     private Hashtable? m_Repositories;
 
@@ -30,14 +29,14 @@ public class UnitOfWork(AppDbContext appDbContext) : IUnitOfWork
     }
 
     /// <inheritdoc />
-    public async Task<int> SaveChangesAsync()
+    public int SaveChanges()
     {
-        return await appDbContext.SaveChangesAsync();
+        return appDbContext.SaveChanges();
     }
 
     /// <inheritdoc />
-    public async Task<bool> SaveChangesReturnBool()
+    public bool SaveChangesReturnBool()
     {
-        return await appDbContext.SaveChangesAsync() > 0;
+        return appDbContext.SaveChanges() > 0;
     }
 }

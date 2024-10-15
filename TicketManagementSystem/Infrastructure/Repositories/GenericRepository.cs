@@ -1,27 +1,27 @@
 ﻿using Domain.Repositories;
-using Infrastructure.Data;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 
-public class GenericRepository<T>(AppDbContext appDbContext) : IGenericRepository<T> where T : class
+public class GenericRepository<T>(IdentityDbContext appDbContext) : IGenericRepository<T> where T : class
 {
     /// <inheritdoc />
-    public async Task<T?> GetByIdAsync(int id)
+    public T? GetById(int id)
     {
-        return await appDbContext.Set<T>().FindAsync(id);
+        return appDbContext.Set<T>().Find(id);
     }
 
     /// <inheritdoc />
-    public async Task<List<T>> GetAllAsync()
+    public List<T> GetAll()
     {
-        return await appDbContext.Set<T>().ToListAsync();
+        return appDbContext.Set<T>().ToList();
     }
 
     /// <inheritdoc />
-    public async Task AddAsync(T entity)
+    public void Add(T entity)
     {
-        await appDbContext.Set<T>().AddAsync(entity);
+        appDbContext.Set<T>().Add(entity);
     }
 
     /// <inheritdoc />
@@ -38,8 +38,8 @@ public class GenericRepository<T>(AppDbContext appDbContext) : IGenericRepositor
     }
 
     /// <inheritdoc />
-    public async Task SaveChangesAsync()
+    public void SaveChanges()
     {
-        await appDbContext.SaveChangesAsync();
+        appDbContext.SaveChanges();
     }
 }
