@@ -1,0 +1,17 @@
+﻿@page "/logout"
+@layout EmptyLayout
+@using Domain.Entities
+@using Microsoft.AspNetCore.Identity
+@using TicketManagementUI.Components.Layout
+@inject SignInManager<User> SignInManager
+@inject NavigationManager NavigationManager
+
+@code
+{
+    /// <inheritdoc />
+    protected override async Task OnInitializedAsync()
+    {
+        await SignInManager.SignOutAsync();
+        NavigationManager.NavigateTo("/login");
+    }
+}
