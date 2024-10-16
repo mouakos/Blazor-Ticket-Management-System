@@ -76,7 +76,7 @@ public static class Seed
             ExpectedDays = 1
         });
 
-        var date = new DateTime(2024, 9, 1);
+        var date = DateTime.Now;
 
         var ticketId = 1;
         var testTickets = new Faker<Ticket>()
@@ -85,10 +85,13 @@ public static class Seed
             .RuleFor(t => t.CategoryId, f => f.PickRandom(1, 2, 3))
             .RuleFor(t => t.ProductId, f => f.PickRandom(1, 2, 3))
             .RuleFor(t => t.PriorityId, f => f.PickRandom(1, 2, 3))
-            .RuleFor(t => t.Status, f => f.PickRandom("NEW", "OPEN", "CLOSED"))
+            .RuleFor(t => t.Status,
+                f => f.PickRandom(Constants.c_StatusNew, Constants.c_StatusOpen, Constants.c_StatusClosed))
             .RuleFor(t => t.Summary, _ => $"Sample ticket {ticketId}")
-            .RuleFor(t => t.RaisedDate, _ => date.AddDays(1))
+            .RuleFor(t => t.RaisedDate, f => date.AddDays(f.PickRandom(-1, 0)))
+            .RuleFor(t => t.ClosedBy, (_, t) => t.Status == Constants.c_StatusClosed ? userId : null)
             .RuleFor(t => t.ExpectedDate, f => date.AddDays(f.PickRandom(1, 7, 14)))
+            .RuleFor(t => t.ClosedDate, (_, t) => t.Status == Constants.c_StatusClosed ? t.ExpectedDate : null)
             .RuleFor(t => t.Description, _ => $"Description for ticket {ticketId}");
 
         var tickets = testTickets.Generate(60);
