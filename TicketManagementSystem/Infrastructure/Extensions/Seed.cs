@@ -10,7 +10,7 @@ public static class Seed
 {
     public static void GenerateSeed(this ModelBuilder modelBuilder)
     {
-        var userId = Guid.NewGuid().ToString();
+        const string userId = "c5e57a7f-39e8-4007-940e-4468dfbb04f3";
         const string email = "test@gmail.com";
 
         // Create user

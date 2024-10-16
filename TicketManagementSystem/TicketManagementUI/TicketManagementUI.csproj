@@ -10,12 +10,14 @@
     <None Remove="Components\App.razor.css" />
     <None Remove="Components\Pages\Account\Login.razor.css" />
     <None Remove="Components\Pages\Tickets\Ticket.razor.css" />
+    <None Remove="Components\Pages\Tickets\TicketDetails.razor.css" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Components\App.razor.css" />
     <Content Include="Components\Pages\Account\Login.razor.css" />
     <Content Include="Components\Pages\Tickets\Ticket.razor.css" />
+    <Content Include="Components\Pages\Tickets\TicketDetails.razor.css" />
   </ItemGroup>
 
   <ItemGroup>

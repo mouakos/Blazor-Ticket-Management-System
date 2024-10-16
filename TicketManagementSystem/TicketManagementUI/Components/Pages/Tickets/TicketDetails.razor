@@ -1,0 +1,212 @@
+﻿@page "/ticket/details/{ticketId:int}"
+@using Domain.DTOs.Requests
+@using Infrastructure.Common
+@using Microsoft.AspNetCore.Authorization
+@using TicketManagementUI.Extensions.Helpers
+@attribute [Authorize]
+
+<SectionContent SectionName="page-title">Ticket Details</SectionContent>
+
+@inject ITicketService TicketService
+@inject IAccountService AccountService
+@inject ICriteriaService CriteriaService
+@inject NavigationManager Nav
+
+@rendermode InteractiveServer
+<MudPopoverProvider />
+<div class="head-panel">
+    <MudButton StartIcon="@Icons.Material.Filled.ArrowBack" @onclick="BackToTicketList" Variant="Variant.Filled" Color="Color.Primary">
+        <MudText>Back to list</MudText>
+    </MudButton>
+    <MudButton Disabled="m_IsClosed" StartIcon="@Icons.Material.Filled.CheckCircle"  Variant="Variant.Filled" Color="Color.Error">
+        <MudText>Close</MudText>
+    </MudButton>
+</div>
+
+<SectionContent SectionName="page-title">Ticket ID: @m_Ticket.TicketIdView</SectionContent>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-10 mt-3 p-3 discussion-panel">
+            <div class="ticket-info">
+                <p style="font-size:25px">@m_Ticket.Summary</p>
+
+                <table class="mt-2">
+                    <tr>
+                        <td rowspan="2">
+                            <MudImage Src="Uploads/Avatars/avatar.jpg"
+                                      Width="50" Height="50" Style="border-radius:5px" />
+                        </td>
+                        <td>
+                            <span class="ms-3">
+                                <strong>@m_Ticket.RaisedByName</strong>
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+
+                            <span class="ms-3">
+                                @m_Ticket.CreatedDate.BeautifyDate()
+                            </span>
+                        </td>
+                    </tr>
+                </table>
+
+                <div class="mt-4">
+                    @((MarkupString)m_Ticket.Description)
+                </div>
+
+               
+            </div>
+        </div>
+        <div class="col-sm-2 action-panel">
+            <MudStack Style="width: 100%" class="mt-5">
+                <Alert @ref="m_Alert"></Alert>
+                @if (m_Errors.Length > 0)
+                {
+                    <MudItem>
+                        <MudPaper Class="pa-4 mud-height-full">
+                            <MudText Typo="Typo.subtitle2">@($"Error found ({m_Errors.Length})")</MudText>
+
+                            @foreach (var error in m_Errors)
+                            {
+                                <MudText Color="@Color.Error">@error</MudText>
+                            }
+                        </MudPaper>
+                    </MudItem>
+                }
+                <MudButton Variant="Variant.Filled"
+                           FullWidth="true" 
+                            EndIcon="@Icons.Material.Filled.Save" 
+                            Color="Color.Primary"
+                            @onclick="Update">
+                            Update Ticket
+                    </MudButton>
+                <MudTextField T="string" ReadOnly="true" Text="@m_Ticket.ExpectedDate.BeautifyDate()" Label="Expected Completion Date" Variant="Variant.Outlined"></MudTextField>
+                <Select @ref="m_ProductDdl" elements="@m_Products" label="Product"></Select>
+                <Select @ref="m_CategoryDdl" elements="@m_Categories" label="Category"></Select>
+                <Select @ref="m_AssignDdl" elements="@m_Users" label="Assign"></Select>
+                <Select @ref="m_PriorityDdl" elements="@m_Priorities" label="Priority"></Select>
+                <Select @ref="m_StatusDdl" elements="@m_Status" label="Status"></Select>
+            </MudStack>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int ticketId { get; set; }
+
+    private TicketResponse m_Ticket; 
+
+    Select m_ProductDdl;
+    Select m_PriorityDdl;
+    Select m_CategoryDdl;
+    Select m_StatusDdl;
+    Select m_AssignDdl;
+
+    private List<SelectItem> m_Products;
+    private List<SelectItem> m_Priorities;
+    private List<SelectItem> m_Categories;
+    private List<SelectItem> m_Status;
+    private List<SelectItem> m_Users;
+
+    private bool m_IsClosed = false;
+    private Alert m_Alert;
+    private string?[] m_Errors = [];
+
+    protected override Task OnInitializedAsync()
+    {
+        m_Ticket = TicketService.FindTicket(ticketId);
+        InitializeDropdown();
+        return Task.CompletedTask;
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            AssignTicketValue();
+        }
+    }
+
+    private void AssignTicketValue()
+    {
+        m_ProductDdl.selectedValue = m_Ticket.ProductId.ToString();
+        m_PriorityDdl.selectedValue = m_Ticket.PriorityId.ToString();
+        m_CategoryDdl.selectedValue = m_Ticket.CategoryId.ToString();
+        m_StatusDdl.selectedValue = m_Ticket.Status;
+
+        if (m_Ticket.ExpectedDate < DateTime.Now && m_Ticket.Status != Constants.c_StatusClosed)
+        {
+            m_Alert.ShowFailed("This ticket is overdue!");
+        }
+
+        if (m_Ticket.AssignedToId != null)
+        {
+            m_AssignDdl.selectedValue = m_Ticket.AssignedToId.ToString();
+        }
+
+        StateHasChanged();
+    }
+
+    private void InitializeDropdown()
+    {
+        m_Products = CriteriaService.GetProducts()
+            .Select(x => new SelectItem { Value = x.Id.ToString(), Text = x.Name })
+            .ToList();
+
+
+        m_Priorities = CriteriaService.GetPriorities()
+                    .Select(x => new SelectItem { Value = x.Id.ToString(), Text = x.Name })
+                    .ToList();
+
+        m_Categories = CriteriaService.GetCategories()
+                    .Select(x => new SelectItem { Value = x.Id.ToString(), Text = x.Name })
+                    .ToList();
+
+
+        m_Status = CriteriaService.GetStatus().Select(x => new SelectItem { Value = x, Text = x }).ToList();
+
+        m_Users = AccountService.GetUsers().Select(x => new SelectItem { Value = x.Id, Text = x.Email }).ToList();
+    }
+
+    private void BackToTicketList()
+    {
+        Nav.NavigateTo("/ticket");
+    }
+
+    private async Task Update()
+    {
+        var request = new UpdateTicketRequest
+        {
+            TicketId = m_Ticket.TicketId,
+            ProductId = m_ProductDdl.selectedValue.ToNullableInteger(),
+            CategoryId = m_CategoryDdl.selectedValue.ToNullableInteger(),
+            PriorityId = m_PriorityDdl.selectedValue.ToNullableInteger(),
+            AssignedToId = m_AssignDdl.selectedValue,
+            Status = m_StatusDdl.selectedValue
+        };
+
+        var validationHelper = new ValidationHelpers(request);
+        var isValid = validationHelper.Validate();
+        m_Errors = validationHelper.ValidationResults.Select(x => x.ErrorMessage).ToArray();
+
+        if (isValid)
+        {
+            var result = await TicketService.UpdateTicketAsync(request);
+            if (result.IsSuccess)
+            {
+                m_Alert.ShowSuccess("Successfully update the ticket!");
+
+                m_Ticket = TicketService.FindTicket(ticketId);
+                AssignTicketValue();
+            } else
+            {
+                m_Alert.ShowFailed("Failed: " + result.ErrorMessage);
+            }
+        }
+    }
+
+}
+

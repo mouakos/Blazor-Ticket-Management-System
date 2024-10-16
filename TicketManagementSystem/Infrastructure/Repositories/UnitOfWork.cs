@@ -32,14 +32,14 @@ public sealed class UnitOfWork(AppDbContext appDbContext, ITicketRepository tick
     }
 
     /// <inheritdoc />
-    public int SaveChanges()
+    public async Task<int> SaveChanges()
     {
-        return appDbContext.SaveChanges();
+        return await appDbContext.SaveChangesAsync();
     }
 
     /// <inheritdoc />
-    public bool SaveChangesReturnBool()
+    public async Task<bool> SaveChangesReturnBool()
     {
-        return appDbContext.SaveChanges() > 0;
+        return await appDbContext.SaveChangesAsync() > 0;
     }
 }

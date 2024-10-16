@@ -7,6 +7,7 @@
 @inject ITicketService TicketService
 @inject ICriteriaService CriteriaService
 @inject IAccountService AccountService
+@inject NavigationManager NavigationManager
 <MudPopoverProvider />
 
 
@@ -40,7 +41,7 @@
             <MultiSelect @ref="m_RaisedbyDdl" elements="@m_Raisedby" label="Raised By">
             </MultiSelect>
         </MudItem>
-        <MudItem class="d-flex align-content-center flex-grow-1 gap-3">
+        <MudItem class="d-flex align-center flex-grow-1 gap-3">
             <MudButton Variant="Variant.Filled" @onclick="() => m_DataGrid.ReloadServerData()" Color="Color.Primary">
                 <MudText>Search</MudText>
             </MudButton>
@@ -54,7 +55,9 @@
 <MudDataGrid @ref="m_DataGrid"
              T="TicketResponse"
              SortMode="@SortMode.None"
-             ServerData="ServerReload">
+             ServerData="ServerReload"
+             Hover="true"
+             RowClick="RowClicked">
     <Columns>
         <PropertyColumn Property="x => x.TicketIdView" Title="Ticket Id" />
         <PropertyColumn Property="x => x.Summary" />
@@ -150,4 +153,10 @@
 
         return m_DataGrid.ReloadServerData();
     }
+
+    private void RowClicked(DataGridRowClickEventArgs<TicketResponse> obj)
+    {
+        NavigationManager.NavigateTo($"/ticket/details/{obj.Item.TicketId}");
+    }
+
 }

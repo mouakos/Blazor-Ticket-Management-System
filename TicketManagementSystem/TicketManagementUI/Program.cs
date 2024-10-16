@@ -46,6 +46,8 @@ builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 builder.Services.AddScoped<ITicketService, TicketService>();
 builder.Services.AddScoped(typeof(EncryptionHelper<>));
 
+/*HTTP*/
+builder.Services.AddHttpContextAccessor();
 
 /*MudBlazor*/
 builder.Services.AddMudServices();
@@ -64,6 +66,9 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 app.UseAntiforgery();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
