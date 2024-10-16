@@ -3,7 +3,7 @@
     <MudAlert Severity="Severity"
               Variant="Variant.Filled"
               ShowCloseIcon="true"
-              CloseIconClicked="(() => CloseMe())">
+              CloseIconClicked="() => CloseMe()">
         @Message
     </MudAlert>
 }
@@ -35,4 +35,5 @@
         m_ShowLeaveAlert = true;
         StateHasChanged();
     }
+
 }

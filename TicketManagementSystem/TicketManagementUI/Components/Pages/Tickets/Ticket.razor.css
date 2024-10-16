@@ -1,23 +1,17 @@
 ﻿.filter-panel {
+    background-color: var(--light-green);
     padding: 0 20px;
     position: relative;
-    background-color: var(--light-green);
     width: 100%;
 }
 
-.mud-input {
-    background-color: white !important;
-}
+.mud-input { background-color: white !important; }
 
-.mud-elevation-1 {
-    box-shadow: none !important;
-}
+.mud-elevation-1 { box-shadow: none !important; }
 
-.mud-table-row {
-    cursor: pointer !important;
-}
+.mud-table-row { cursor: pointer !important; }
 
 .mud-grid-item {
-    padding-top: .3rem !important;
     padding-bottom: .3rem;
+    padding-top: .3rem !important;
 }

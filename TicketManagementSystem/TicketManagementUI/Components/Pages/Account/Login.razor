@@ -1,9 +1,8 @@
 ﻿@page "/login"
-@layout EmptyLayout
 @using System.ComponentModel.DataAnnotations
 @using Domain.Entities
-@using Domain.Interfaces
 @using Microsoft.AspNetCore.Identity
+@layout EmptyLayout
 @inject SignInManager<User> SignInManager
 @inject IAccountService AccountService
 @inject NavigationManager NavigationManager

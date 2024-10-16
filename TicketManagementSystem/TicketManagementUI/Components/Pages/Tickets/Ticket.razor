@@ -1,6 +1,6 @@
 ﻿@page "/ticket"
-<SectionContent SectionName="page-title">Ticket Management</SectionContent>
 @using Domain.DTOs.Requests
+<SectionContent SectionName="page-title">Ticket Management</SectionContent>
 
 
 @rendermode InteractiveServer
@@ -8,7 +8,7 @@
 @inject ICriteriaService CriteriaService
 @inject IAccountService AccountService
 @inject NavigationManager NavigationManager
-<MudPopoverProvider />
+<MudPopoverProvider/>
 
 
 <div class="filter-panel">
@@ -19,7 +19,7 @@
                           Variant="Variant.Outlined"
                           Adornment="Adornment.Start"
                           AdornmentIcon="@Icons.Material.Filled.Search"
-                          AdornmentColor="Color.Dark" />
+                          AdornmentColor="Color.Dark"/>
         </MudItem>
         <MudItem>
             <MultiSelect @ref="m_ProductDdl" elements="@m_Products" label="Product">
@@ -59,18 +59,18 @@
              Hover="true"
              RowClick="RowClicked">
     <Columns>
-        <PropertyColumn Property="x => x.TicketIdView" Title="Ticket Id" />
-        <PropertyColumn Property="x => x.Summary" />
-        <PropertyColumn Property="x => x.Product" />
-        <PropertyColumn Property="x => x.Category" />
-        <PropertyColumn Property="x => x.Priority" />
-        <PropertyColumn Property="x => x.Status" />
-        <PropertyColumn Property="x => x.RaisedBy" Title="Raised By" />
-        <PropertyColumn Property="x => x.ExpectedDate" Title="Expected Date" Format="dd MMM yyyy" />
-        <PropertyColumn Property="x => x.CreatedDate" Title="Created Date" Format="dd MMM yyyy" />
+        <PropertyColumn Property="x => x.TicketIdView" Title="Ticket Id"/>
+        <PropertyColumn Property="x => x.Summary"/>
+        <PropertyColumn Property="x => x.Product"/>
+        <PropertyColumn Property="x => x.Category"/>
+        <PropertyColumn Property="x => x.Priority"/>
+        <PropertyColumn Property="x => x.Status"/>
+        <PropertyColumn Property="x => x.RaisedBy" Title="Raised By"/>
+        <PropertyColumn Property="x => x.ExpectedDate" Title="Expected Date" Format="dd MMM yyyy"/>
+        <PropertyColumn Property="x => x.CreatedDate" Title="Created Date" Format="dd MMM yyyy"/>
     </Columns>
     <PagerContent>
-        <MudDataGridPager T="TicketResponse" />
+        <MudDataGridPager T="TicketResponse"/>
     </PagerContent>
 </MudDataGrid>
 
@@ -100,17 +100,17 @@
     private void InitializeDropdown()
     {
         m_Products = CriteriaService.GetProducts()
-                    .Select(x => new SelectItem { Value = x.Id.ToString(), Text = x.Name })
-                    .ToList();
+            .Select(x => new SelectItem { Value = x.Id.ToString(), Text = x.Name })
+            .ToList();
 
 
         m_Priorities = CriteriaService.GetPriorities()
-                    .Select(x => new SelectItem { Value = x.Id.ToString(), Text = x.Name })
-                    .ToList();
+            .Select(x => new SelectItem { Value = x.Id.ToString(), Text = x.Name })
+            .ToList();
 
         m_Categories = CriteriaService.GetCategories()
-                    .Select(x => new SelectItem { Value = x.Id.ToString(), Text = x.Name })
-                    .ToList();
+            .Select(x => new SelectItem { Value = x.Id.ToString(), Text = x.Name })
+            .ToList();
 
 
         m_Status = CriteriaService.GetStatus().Select(x => new SelectItem { Value = x, Text = x }).ToList();
@@ -120,15 +120,15 @@
 
     private async Task<GridData<TicketResponse>> ServerReload(GridState<TicketResponse> state)
     {
-        IEnumerable<TicketResponse> getTickets = TicketService.GetTickets(new TicketRequest()
-            {
-                Summary = Summary,
-                ProductId = m_ProductDdl.Options.Select(int.Parse).ToArray(),
-                CategoryId = m_CategoryDdl.Options.Select(int.Parse).ToArray(),
-                PriorityId = m_PriorityDdl.Options.Select(int.Parse).ToArray(),
-                Status = m_StatusDdl.Options.ToArray(),
-                RaisedBy = m_RaisedbyDdl.Options.ToArray(),
-            });
+        IEnumerable<TicketResponse> getTickets = TicketService.GetTickets(new TicketRequest
+        {
+            Summary = Summary,
+            ProductId = m_ProductDdl.Options.Select(int.Parse).ToArray(),
+            CategoryId = m_CategoryDdl.Options.Select(int.Parse).ToArray(),
+            PriorityId = m_PriorityDdl.Options.Select(int.Parse).ToArray(),
+            Status = m_StatusDdl.Options.ToArray(),
+            RaisedBy = m_RaisedbyDdl.Options.ToArray()
+        });
 
         await Task.Delay(300);
 
@@ -136,10 +136,10 @@
 
         var pagedData = getTickets.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
         return new GridData<TicketResponse>
-            {
-                TotalItems = totalItems,
-                Items = pagedData
-            };
+        {
+            TotalItems = totalItems,
+            Items = pagedData
+        };
     }
 
     private Task Reset()

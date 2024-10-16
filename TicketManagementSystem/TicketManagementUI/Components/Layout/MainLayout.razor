@@ -1,9 +1,9 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
-
 @inherits LayoutComponentBase
 
 @* Required *@
-<MudThemeProvider />
+<MudThemeProvider Theme="m_MyCustomTheme" />
+@* <MudThemeProvider/> *@
 @* <MudPopoverProvider /> *@
 
 @* Needed for dialogs *@
@@ -14,7 +14,7 @@
 
 <div class="page">
     <div class="sidebar">
-        <NavMenu />
+        <NavMenu/>
     </div>
 
     <main>
@@ -39,3 +39,16 @@
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
 </div>
+
+@code {
+
+    readonly MudTheme m_MyCustomTheme = new()
+    {
+        PaletteLight = new PaletteLight
+        {
+            Primary = "#007D88",
+            Info = "#64748b",
+            Error = "#dc3545"
+        }
+    };
+}

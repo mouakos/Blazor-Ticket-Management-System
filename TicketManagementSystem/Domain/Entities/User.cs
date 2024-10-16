@@ -4,6 +4,10 @@ namespace Domain.Entities;
 
 public class User : IdentityUser
 {
-    public string? Avatar { get; set; }
+    #region Public properties declaration
+
     public bool AccountConfirmed { get; set; }
+    public string? Avatar { get; set; }
+
+    #endregion
 }

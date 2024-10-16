@@ -1,19 +1,22 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.Net.Sockets;
 
 namespace Domain.Entities;
 
 public class Attachment
 {
-    public int Id { get; set; }
-    public string? FileName { get; set; }
-    public string? ServerFileName { get; set; }
-    public int FileSize { get; set; }
-    public DateTime CreatedDate { get; set; }
+    #region Public properties declaration
 
-    [ForeignKey(nameof(Ticket))] public int TicketId { get; set; }
+    public DateTime CreatedDate { get; set; }
+    public Discussion? Discussion { get; set; }
+
+    [ForeignKey(nameof(Discussion))] public int? DiscussionId { get; set; }
+    public string? FileName { get; set; }
+    public long FileSize { get; set; }
+    public int Id { get; set; }
+    public string? ServerFileName { get; set; }
     public Ticket? Ticket { get; set; }
 
-    [ForeignKey(nameof(Discussion))] public int DiscussionId { get; set; }
-    public Discussion? Discussion { get; set; }
+    [ForeignKey(nameof(Ticket))] public int? TicketId { get; set; }
+
+    #endregion
 }

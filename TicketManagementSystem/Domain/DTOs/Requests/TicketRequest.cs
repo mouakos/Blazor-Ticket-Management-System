@@ -2,10 +2,14 @@
 
 public class TicketRequest
 {
-    public string? Summary { get; set; }
-    public int[]? ProductId { get; set; }
+    #region Public properties declaration
+
     public int[]? CategoryId { get; set; }
     public int[]? PriorityId { get; set; }
-    public string[]? Status { get; set; }
+    public int[]? ProductId { get; set; }
     public string[]? RaisedBy { get; set; }
+    public string[]? Status { get; set; }
+    public string? Summary { get; set; }
+
+    #endregion
 }

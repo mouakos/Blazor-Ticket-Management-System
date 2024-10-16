@@ -1,0 +1,209 @@
+﻿@page "/ticket/create"
+@using Domain.DTOs.Requests
+@using Microsoft.AspNetCore.Authorization
+@using MudExRichTextEditor
+@using TicketManagementUI.Extensions.Helpers
+
+@attribute [Authorize]
+@inject ICriteriaService CriteriaService
+@inject IAccountService AccountService
+@inject ITicketService TicketService
+@inject NavigationManager Nav
+
+@rendermode InteractiveServer
+<MudPopoverProvider/>
+<SectionContent SectionName="page-title">Create a New Ticket</SectionContent>
+
+<div class="head-panel">
+    <MudButton StartIcon="@Icons.Material.Filled.ArrowBack" @onclick="BackToTicketList" Variant="Variant.Filled" Color="Color.Primary">
+        <MudText>Back to list</MudText>
+    </MudButton>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-10 mt-2 discussion-panel">
+            <div class="ticket-info">
+                <div>
+                    <MudTextField T="string" @ref="m_Summary" Label="Summary" Variant="Variant.Text"></MudTextField>
+                </div>
+                <MudExRichTextEdit @ref="@m_DescriptionEditor"
+                                   Height="444"
+                                   Class="mt-3"
+                                   Required="true" RequiredError="Ticket Description is required!"
+                                   Placeholder="Description">
+                    <ToolbarContent>
+                        <select class="ql-header">
+                            <option selected=""></option>
+                            <option value="1"></option>
+                            <option value="2"></option>
+                            <option value="3"></option>
+                            <option value="4"></option>
+                            <option value="5"></option>
+                        </select>
+                        <span class="ql-formats">
+                            <button class="ql-bold"></button>
+                            <button class="ql-italic"></button>
+                            <button class="ql-underline"></button>
+                            <button class="ql-strike"></button>
+                        </span>
+                        <span class="ql-formats">
+                            <select class="ql-color"></select>
+                            <select class="ql-background"></select>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-list" value="ordered"></button>
+                            <button class="ql-list" value="bullet"></button>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-link"></button>
+                        </span>
+                    </ToolbarContent>
+                </MudExRichTextEdit>
+
+                <div class="mt-3">
+                    <MudFileUpload T="IReadOnlyList<IBrowserFile>" FilesChanged="UploadFiles">
+                        <ActivatorContent>
+                            <MudButton Variant="Variant.Filled"
+                                       Color="Color.Primary"
+                                       StartIcon="@Icons.Material.Filled.CloudUpload">
+                                Attachments
+                            </MudButton>
+                        </ActivatorContent>
+                    </MudFileUpload>
+                    @if (m_Files.Count > 0)
+                    {
+                        <MudText Typo="@Typo.h6">@m_Files.Count() File@(m_Files.Count() == 1 ? "" : "s"):</MudText>
+                        <MudList T="string">
+                            @foreach (var file in m_Files)
+                            {
+                                <MudListItem Icon="@Icons.Material.Filled.AttachFile" @key="@file">
+                                    @file.Name <code>@file.Size bytes</code>
+                                </MudListItem>
+                            }
+                        </MudList>
+                    }
+                </div>
+
+            </div>
+        </div>
+        <div class="col-sm-2 action-panel">
+            <MudStack Style="width: 100%" class="mt-5">
+                <Alert @ref="m_Alert"></Alert>
+                @if (m_Errors.Length > 0)
+                {
+                    <MudItem>
+                        <MudPaper Class="pa-4 mud-height-full">
+                            <MudText Typo="Typo.subtitle2">@($"Error found ({m_Errors.Length})")</MudText>
+
+                            @foreach (var error in m_Errors)
+                            {
+                                <MudText Color="@Color.Error">@error</MudText>
+                            }
+                        </MudPaper>
+                    </MudItem>
+                }
+                <MudButton @onclick="CreateTicket" Variant="Variant.Filled"
+                           FullWidth="true"
+                           EndIcon="@Icons.Material.Filled.Save"
+                           Color="Color.Primary">
+                    Create Ticket
+                </MudButton>
+                <Select @ref="m_ProductDdl" elements="@m_Products" label="Product"></Select>
+                <Select @ref="m_CategoryDdl" elements="@m_Categories" label="Category"></Select>
+                <Select @ref="m_AssignDdl" elements="@m_Users" label="Assign to"></Select>
+                <Select @ref="m_PriorityDdl" elements="@m_Priorities" label="Priority"></Select>
+            </MudStack>
+        </div>
+    </div>
+</div>
+
+@code {
+    private Alert m_Alert;
+    string[] m_Errors = [];
+
+    MudTextField<string> m_Summary;
+    MudExRichTextEdit m_DescriptionEditor;
+
+    Select m_ProductDdl;
+    Select m_PriorityDdl;
+    Select m_CategoryDdl;
+    Select m_AssignDdl;
+
+    private List<SelectItem> m_Products;
+    private List<SelectItem> m_Priorities;
+    private List<SelectItem> m_Categories;
+    private List<SelectItem> m_Users;
+
+    private readonly IList<IBrowserFile> m_Files = new List<IBrowserFile>();
+
+    protected override Task OnInitializedAsync()
+    {
+        InitializeDropdown();
+        return Task.CompletedTask;
+    }
+
+    private void InitializeDropdown()
+    {
+        m_Products = CriteriaService.GetProducts()
+            .Select(x => new SelectItem { Value = x.Id.ToString(), Text = x.Name })
+            .ToList();
+
+
+        m_Priorities = CriteriaService.GetPriorities()
+            .Select(x => new SelectItem { Value = x.Id.ToString(), Text = x.Name })
+            .ToList();
+
+        m_Categories = CriteriaService.GetCategories()
+            .Select(x => new SelectItem { Value = x.Id.ToString(), Text = x.Name })
+            .ToList();
+
+        m_Users = AccountService.GetUsers().Select(x => new SelectItem { Value = x.Id, Text = x.Email }).ToList();
+    }
+
+
+    private void BackToTicketList()
+    {
+        Nav.NavigateTo("/ticket");
+    }
+
+    private void UploadFiles(IReadOnlyList<IBrowserFile>? files)
+    {
+        foreach (var file in files)
+        {
+            m_Files.Add(file);
+        }
+    }
+
+    private async Task CreateTicket()
+    {
+        var request = new CreateTicketRequest
+        {
+            Summary = m_Summary.Text,
+            Description = m_DescriptionEditor.Value,
+            ProductId = m_ProductDdl.SelectedValue.ToNullableInteger(),
+            CategoryId = m_CategoryDdl.SelectedValue.ToNullableInteger(),
+            PriorityId = m_PriorityDdl.SelectedValue.ToNullableInteger(),
+            AssignedToId = m_AssignDdl.SelectedValue,
+            Files = m_Files
+        };
+
+        var validationHelper = new ValidationHelpers(request);
+        var isValid = validationHelper.Validate();
+        m_Errors = validationHelper.ValidationResults.Select(x => x.ErrorMessage).ToArray();
+
+        if (isValid)
+        {
+            var createTicketResult = await TicketService.CreateTicketAsync(request);
+            if (createTicketResult.IsSuccess)
+            {
+                Nav.NavigateTo("/ticket/details/" + createTicketResult.Value);
+            }
+            else
+            {
+                m_Alert.ShowFailed(createTicketResult.ErrorMessage);
+            }
+        }
+    }
+
+}

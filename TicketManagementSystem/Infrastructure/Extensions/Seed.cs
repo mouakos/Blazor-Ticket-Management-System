@@ -8,6 +8,8 @@ namespace Infrastructure.Extensions;
 
 public static class Seed
 {
+    #region Public methods declaration
+
     public static void GenerateSeed(this ModelBuilder modelBuilder)
     {
         const string userId = "c5e57a7f-39e8-4007-940e-4468dfbb04f3";
@@ -97,4 +99,6 @@ public static class Seed
         var tickets = testTickets.Generate(60);
         modelBuilder.Entity<Ticket>().HasData(tickets);
     }
+
+    #endregion
 }

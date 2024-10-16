@@ -13,7 +13,7 @@
 @inject NavigationManager Nav
 
 @rendermode InteractiveServer
-<MudPopoverProvider />
+<MudPopoverProvider/>
 <div class="head-panel">
     <MudButton StartIcon="@Icons.Material.Filled.ArrowBack" @onclick="BackToTicketList" Variant="Variant.Filled" Color="Color.Primary">
         <MudText>Back to list</MudText>
@@ -28,13 +28,13 @@
     <div class="row">
         <div class="col-sm-10 mt-3 p-3 discussion-panel">
             <div class="ticket-info">
-                <p style="font-size:25px">@m_Ticket.Summary</p>
+                <p style="font-size: 25px">@m_Ticket.Summary</p>
 
                 <table class="mt-2">
                     <tr>
                         <td rowspan="2">
                             <MudImage Src="Uploads/Avatars/avatar.jpg"
-                                      Width="50" Height="50" Style="border-radius:5px" />
+                                      Width="50" Height="50" Style="border-radius: 5px"/>
                         </td>
                         <td>
                             <span class="ms-3">
@@ -56,7 +56,30 @@
                     @((MarkupString)m_Ticket.Description)
                 </div>
 
-               
+                @if(m_Ticket.Attachments.Count > 0)
+                {
+                    <div class="attachment mt-5">
+                        <div>
+                            <strong>Attachments</strong>
+                        </div>
+                        <div class="mt-2">
+                            <MudGrid>
+                                @foreach (var item in m_Ticket.Attachments)
+                                {
+                                    <MudItem>
+                                        <MudButton Download="@item.FileName"
+                                                   Href="@item.ServerFileName"
+                                                   Variant="Variant.Outlined"
+                                                   StartIcon="@Icons.Material.Filled.CloudDownload"
+                                                   Color="Color.Primary">
+                                            @item.FileName
+                                        </MudButton>
+                                    </MudItem>
+                                }
+                            </MudGrid>
+                        </div>
+                    </div>
+                }
             </div>
         </div>
         <div class="col-sm-2 action-panel">
@@ -76,14 +99,14 @@
                     </MudItem>
                 }
                 <MudButton Variant="Variant.Filled"
-                           FullWidth="true" 
-                            EndIcon="@Icons.Material.Filled.Save" 
-                            Color="Color.Primary"
-                            @onclick="Update">
-                            Update Ticket
-                    </MudButton>
+                           FullWidth="true"
+                           EndIcon="@Icons.Material.Filled.Save"
+                           Color="Color.Primary"
+                           @onclick="Update">
+                    Update Ticket
+                </MudButton>
                 <MudTextField T="string" ReadOnly="true" Text="@m_Ticket.ExpectedDate.BeautifyDate()" Label="Expected Completion Date" Variant="Variant.Outlined"></MudTextField>
-                
+
                 @if (m_IsClosed)
                 {
                     <MudTextField T="string" ReadOnly="true" Text="@m_Ticket.ClosedBy" Label="Closed By" Variant="Variant.Outlined"></MudTextField>
@@ -100,10 +123,9 @@
 </div>
 
 @code {
-    [Parameter]
-    public int ticketId { get; set; }
+    [Parameter] public int ticketId { get; set; }
 
-    private TicketResponse m_Ticket; 
+    private TicketResponse m_Ticket;
 
     Select m_ProductDdl;
     Select m_PriorityDdl;
@@ -167,12 +189,12 @@
 
 
         m_Priorities = CriteriaService.GetPriorities()
-                    .Select(x => new SelectItem { Value = x.Id.ToString(), Text = x.Name })
-                    .ToList();
+            .Select(x => new SelectItem { Value = x.Id.ToString(), Text = x.Name })
+            .ToList();
 
         m_Categories = CriteriaService.GetCategories()
-                    .Select(x => new SelectItem { Value = x.Id.ToString(), Text = x.Name })
-                    .ToList();
+            .Select(x => new SelectItem { Value = x.Id.ToString(), Text = x.Name })
+            .ToList();
 
 
         m_Status = CriteriaService.GetStatus().Select(x => new SelectItem { Value = x, Text = x }).ToList();
@@ -216,7 +238,8 @@
 
                 m_Ticket = TicketService.FindTicket(ticketId);
                 AssignTicketValue();
-            } else
+            }
+            else
             {
                 m_Alert.ShowFailed("Failed: " + result.ErrorMessage);
             }
@@ -224,4 +247,3 @@
     }
 
 }
-

@@ -2,6 +2,10 @@
 
 public class SelectItem
 {
-    public string? Value { get; set; }
+    #region Public properties declaration
+
     public string? Text { get; set; }
+    public string? Value { get; set; }
+
+    #endregion
 }

@@ -1,34 +1,28 @@
 .page {
-    position: relative;
     display: flex;
     flex-direction: column;
+    position: relative;
 }
 
-main {
-    flex: 1;
-}
+main { flex: 1; }
 
-.sidebar {
-    border-right: 1px solid #eaeaea;
-}
+.sidebar { border-right: 1px solid #eaeaea; }
 
 .top-row {
+    align-items: center;
     background-color: #f7f7f7;
     border-bottom: 1px solid #d6d5d5;
-    height: 3.5rem;
     display: flex;
-    align-items: center;
+    height: 3.5rem;
 }
 
 .top-row ::deep a, .top-row ::deep .btn-link {
-    white-space: nowrap;
     margin-left: 1.5rem;
     text-decoration: none;
+    white-space: nowrap;
 }
 
-.top-row ::deep a:hover, .top-row ::deep .btn-link:hover {
-    text-decoration: underline;
-}
+.top-row ::deep a:hover, .top-row ::deep .btn-link:hover { text-decoration: underline; }
 
 .top-row ::deep a:first-child {
     overflow: hidden;
@@ -36,15 +30,13 @@ main {
 }
 
 
-.page {
-    flex-direction: row;
-}
+.page { flex-direction: row; }
 
 .sidebar {
-    width: 4.5rem;
     height: 100vh;
     position: sticky;
     top: 0;
+    width: 4.5rem;
 }
 
 .top-row {

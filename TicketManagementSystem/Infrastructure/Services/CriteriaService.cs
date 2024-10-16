@@ -6,6 +6,8 @@ namespace Infrastructure.Services;
 
 public class CriteriaService(IUnitOfWork unitOfWork) : ICriteriaService
 {
+    #region Public methods declaration
+
     /// <inheritdoc />
     public List<Category> GetCategories()
     {
@@ -13,15 +15,15 @@ public class CriteriaService(IUnitOfWork unitOfWork) : ICriteriaService
     }
 
     /// <inheritdoc />
-    public List<Product> GetProducts()
-    {
-        return unitOfWork.Repository<Product>().GetAll();
-    }
-
-    /// <inheritdoc />
     public List<Priority> GetPriorities()
     {
         return unitOfWork.Repository<Priority>().GetAll();
+    }
+
+    /// <inheritdoc />
+    public List<Product> GetProducts()
+    {
+        return unitOfWork.Repository<Product>().GetAll();
     }
 
     /// <inheritdoc />
@@ -34,4 +36,6 @@ public class CriteriaService(IUnitOfWork unitOfWork) : ICriteriaService
             "CLOSED"
         ];
     }
+
+    #endregion
 }

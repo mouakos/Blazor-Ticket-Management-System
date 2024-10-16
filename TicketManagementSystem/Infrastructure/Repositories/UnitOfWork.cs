@@ -6,16 +6,26 @@ namespace Infrastructure.Repositories;
 
 public sealed class UnitOfWork(AppDbContext appDbContext, ITicketRepository ticketRepository) : IUnitOfWork
 {
+    #region Private fields declaration
+
     private Hashtable? m_Repositories;
+
+    #endregion
+
+    #region Public properties declaration
+
+    /// <inheritdoc />
+    public ITicketRepository TicketRepository => ticketRepository;
+
+    #endregion
+
+    #region Public methods declaration
 
     /// <inheritdoc />
     public void Dispose()
     {
         appDbContext.Dispose();
     }
-
-    /// <inheritdoc />
-    public ITicketRepository TicketRepository => ticketRepository;
 
     /// <inheritdoc />
     public IGenericRepository<TEntity> Repository<TEntity>() where TEntity : class
@@ -42,4 +52,6 @@ public sealed class UnitOfWork(AppDbContext appDbContext, ITicketRepository tick
     {
         return await appDbContext.SaveChangesAsync() > 0;
     }
+
+    #endregion
 }

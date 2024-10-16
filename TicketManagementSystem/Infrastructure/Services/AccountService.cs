@@ -10,16 +10,17 @@ namespace Infrastructure.Services;
 
 public class AccountService(SignInManager<User> signInManager, IUnitOfWork unitOfWork) : IAccountService
 {
-    /// <inheritdoc />
-    public async Task<BaseResponse<string>> VerifyUserAsync(string email, string password)
-    {
-        var user = await signInManager.UserManager.FindByEmailAsync(email);
-        if (user is null) return new BaseResponse<string> { IsSuccess = false, ErrorMessage = "User not found" };
+    #region Public methods declaration
 
-        var result = await signInManager.UserManager.CheckPasswordAsync(user, password);
-        return !result
-            ? new BaseResponse<string> { IsSuccess = false, ErrorMessage = "Invalid Email / password" }
-            : new BaseResponse<string> { IsSuccess = true, Value = user.UserName };
+    /// <inheritdoc />
+    public List<UserResponse> GetUsers()
+    {
+        return unitOfWork.Repository<User>().GetAll().Select(x => new UserResponse
+        {
+            Id = x.Id,
+            Email = x.Email,
+            Avatar = x.Avatar
+        }).ToList();
     }
 
     /// <inheritdoc />
@@ -33,13 +34,16 @@ public class AccountService(SignInManager<User> signInManager, IUnitOfWork unitO
     }
 
     /// <inheritdoc />
-    public List<UserResponse> GetUsers()
+    public async Task<BaseResponse<string>> VerifyUserAsync(string email, string password)
     {
-        return unitOfWork.Repository<User>().GetAll().Select(x => new UserResponse
-        {
-            Id = x.Id,
-            Email = x.Email,
-            Avatar = x.Avatar,
-        }).ToList();
+        var user = await signInManager.UserManager.FindByEmailAsync(email);
+        if (user is null) return new BaseResponse<string> { IsSuccess = false, ErrorMessage = "User not found" };
+
+        var result = await signInManager.UserManager.CheckPasswordAsync(user, password);
+        return !result
+            ? new BaseResponse<string> { IsSuccess = false, ErrorMessage = "Invalid Email / password" }
+            : new BaseResponse<string> { IsSuccess = true, Value = user.UserName };
     }
+
+    #endregion
 }

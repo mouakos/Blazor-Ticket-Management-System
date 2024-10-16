@@ -9,7 +9,13 @@ namespace Infrastructure.Repositories;
 public class TicketRepository(AppDbContext appDbContext)
     : GenericRepository<Ticket>(appDbContext), ITicketRepository
 {
+    #region Private fields declaration
+
     private readonly AppDbContext m_AppDbContext = appDbContext;
+
+    #endregion
+
+    #region Public methods declaration
 
     /// <inheritdoc />
     public List<Ticket> GetTickets(TicketRequest? request)
@@ -24,9 +30,7 @@ public class TicketRepository(AppDbContext appDbContext)
         if (request is null) return query.ToList();
 
         if (!string.IsNullOrWhiteSpace(request.Summary))
-        {
-            query = query.Where(x => (EF.Functions.Like(x.Summary, $"%{request.Summary}%")));
-        }
+            query = query.Where(x => EF.Functions.Like(x.Summary, $"%{request.Summary}%"));
 
         if (request is { ProductId: not null, ProductId.Length: > 0 })
             query = query.Where(x => request.ProductId.Contains(x.ProductId));
@@ -45,4 +49,6 @@ public class TicketRepository(AppDbContext appDbContext)
 
         return query.OrderByDescending(x => x.RaisedDate).ToList();
     }
+
+    #endregion
 }
