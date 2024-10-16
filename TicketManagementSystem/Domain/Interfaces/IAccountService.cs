@@ -14,12 +14,14 @@ public interface IAccountService
     /// <param name="email">The email of the user.</param>
     /// <param name="password">The password of the user.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the response with a string value.</returns>
-    Task<BaseResponse<string>> VerifyUser(string email, string password);
+    Task<BaseResponse<string>> VerifyUserAsync(string email, string password);
 
     /// <summary>
     /// Registers a new user with the specified request.
     /// </summary>
     /// <param name="request">The request containing the user registration information.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the response.</returns>
-    Task<BaseResponse> RegisterUser(RegisterUserRequest request);
+    Task<BaseResponse> RegisterUserAsync(RegisterUserRequest request);
+
+    List<UserResponse> GetUsers();
 }

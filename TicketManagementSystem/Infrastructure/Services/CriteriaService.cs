@@ -19,7 +19,7 @@ public class CriteriaService(IUnitOfWork unitOfWork) : ICriteriaService
     }
 
     /// <inheritdoc />
-    public List<Priority> GetPriority()
+    public List<Priority> GetPriorities()
     {
         return unitOfWork.Repository<Priority>().GetAll();
     }

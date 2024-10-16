@@ -9,12 +9,12 @@ namespace Infrastructure.Services;
 public class TicketService(IUnitOfWork unitOfWork) : ITicketService
 {
     /// <inheritdoc />
-    public List<TicketResponse> GetTickets(TicketRequest request)
+    public List<TicketResponse> GetTickets(TicketRequest? request = null)
     {
         var tickets = unitOfWork.TicketRepository.GetTickets(request);
         return tickets.Select(x => new TicketResponse
         {
-            TickedId = x.Id,
+            TicketId = x.Id,
             Summary = x.Summary,
             Description = x.Description,
             Product = x.Product?.Name,
@@ -35,7 +35,7 @@ public class TicketService(IUnitOfWork unitOfWork) : ITicketService
 
         return new TicketResponse
         {
-            TickedId = ticket.Id,
+            TicketId = ticket.Id,
             Summary = ticket.Summary,
             Description = ticket.Description,
             ProductId = ticket.ProductId,

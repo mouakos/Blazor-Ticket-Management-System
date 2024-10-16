@@ -4,8 +4,8 @@ namespace Domain.DTOs.Responses;
 
 public class TicketResponse
 {
-    public string TicketIdView => $"T{TickedId.ToString().PadLeft(5, '0')}";
-    public int TickedId { get; set; }
+    public string TicketIdView => $"T{TicketId.ToString().PadLeft(5, '0')}";
+    public int TicketId { get; set; }
     public string? Summary { get; set; }
     public string? Description { get; set; }
     public string? Product { get; set; }

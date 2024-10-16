@@ -1,18 +1,60 @@
 ﻿@page "/ticket"
 <SectionContent SectionName="page-title">Ticket Management</SectionContent>
-@rendermode InteractiveServer
-
 @using Domain.DTOs.Requests
+
+
+@rendermode InteractiveServer
 @inject ITicketService TicketService
+@inject ICriteriaService CriteriaService
+@inject IAccountService AccountService
 <MudPopoverProvider />
 
+
 <div class="filter-panel">
-    Filter her
+    <MudGrid>
+        <MudItem>
+            <MudTextField @bind-Value="Summary"
+                          Class="pt-2"
+                          Variant="Variant.Outlined"
+                          Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Filled.Search"
+                          AdornmentColor="Color.Dark" />
+        </MudItem>
+        <MudItem>
+            <MultiSelect @ref="m_ProductDdl" elements="@m_Products" label="Product">
+            </MultiSelect>
+        </MudItem>
+        <MudItem>
+            <MultiSelect @ref="m_PriorityDdl" elements="@m_Priorities" label="Priority">
+            </MultiSelect>
+        </MudItem>
+        <MudItem>
+            <MultiSelect @ref="m_CategoryDdl" elements="@m_Categories" label="Category">
+            </MultiSelect>
+        </MudItem>
+        <MudItem>
+            <MultiSelect @ref="m_StatusDdl" elements="@m_Status" label="Status">
+            </MultiSelect>
+        </MudItem>
+        <MudItem>
+            <MultiSelect @ref="m_RaisedbyDdl" elements="@m_Raisedby" label="Raised By">
+            </MultiSelect>
+        </MudItem>
+        <MudItem class="d-flex align-content-center flex-grow-1 gap-3">
+            <MudButton Variant="Variant.Filled" @onclick="() => m_DataGrid.ReloadServerData()" Color="Color.Primary">
+                <MudText>Search</MudText>
+            </MudButton>
+            <MudButton Variant="Variant.Filled" @onclick="Reset" Color="Color.Dark">
+                <MudText>Reset</MudText>
+            </MudButton>
+        </MudItem>
+    </MudGrid>
 </div>
 
-<MudDataGrid @ref="m_DataGrid" 
-             T="TicketResponse" SortMode="@SortMode.None" 
-             ServerData="ServerReload" >
+<MudDataGrid @ref="m_DataGrid"
+             T="TicketResponse"
+             SortMode="@SortMode.None"
+             ServerData="ServerReload">
     <Columns>
         <PropertyColumn Property="x => x.TicketIdView" Title="Ticket Id" />
         <PropertyColumn Property="x => x.Summary" />
@@ -30,17 +72,66 @@
 </MudDataGrid>
 
 @code {
-    MudDataGrid<TicketResponse>? m_DataGrid;
 
-    /// <summary>
-    /// Here we simulate getting the paged, filtered and ordered data from the server
-    /// </summary>
+    MudDataGrid<TicketResponse> m_DataGrid;
+    MultiSelect m_ProductDdl;
+    MultiSelect m_PriorityDdl;
+    MultiSelect m_CategoryDdl;
+    MultiSelect m_StatusDdl;
+    MultiSelect m_RaisedbyDdl;
+
+    public string Summary { get; set; }
+
+    private List<SelectItem> m_Products;
+    private List<SelectItem> m_Priorities;
+    private List<SelectItem> m_Categories;
+    private List<SelectItem> m_Status;
+    private List<SelectItem> m_Raisedby;
+
+    protected override Task OnInitializedAsync()
+    {
+        InitializeDropdown();
+        return Task.CompletedTask;
+    }
+
+    private void InitializeDropdown()
+    {
+        m_Products = CriteriaService.GetProducts()
+                    .Select(x => new SelectItem { Value = x.Id.ToString(), Text = x.Name })
+                    .ToList();
+
+
+        m_Priorities = CriteriaService.GetPriorities()
+                    .Select(x => new SelectItem { Value = x.Id.ToString(), Text = x.Name })
+                    .ToList();
+
+        m_Categories = CriteriaService.GetCategories()
+                    .Select(x => new SelectItem { Value = x.Id.ToString(), Text = x.Name })
+                    .ToList();
+
+
+        m_Status = CriteriaService.GetStatus().Select(x => new SelectItem { Value = x, Text = x }).ToList();
+
+        m_Raisedby = AccountService.GetUsers().Select(x => new SelectItem { Value = x.Id, Text = x.Email }).ToList();
+    }
+
     private async Task<GridData<TicketResponse>> ServerReload(GridState<TicketResponse> state)
     {
-        IEnumerable<TicketResponse> tickets = TicketService.GetTickets(new TicketRequest());
+        IEnumerable<TicketResponse> getTickets = TicketService.GetTickets(new TicketRequest()
+            {
+                Summary = Summary,
+                ProductId = m_ProductDdl.Options.Select(int.Parse).ToArray(),
+                CategoryId = m_CategoryDdl.Options.Select(int.Parse).ToArray(),
+                PriorityId = m_PriorityDdl.Options.Select(int.Parse).ToArray(),
+                Status = m_StatusDdl.Options.ToArray(),
+                RaisedBy = m_RaisedbyDdl.Options.ToArray(),
+            });
+
         await Task.Delay(300);
-        var totalItems = tickets.Count();
-        var pagedData = tickets.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
+
+        var totalItems = getTickets.Count();
+
+        var pagedData = getTickets.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
         return new GridData<TicketResponse>
             {
                 TotalItems = totalItems,
@@ -48,5 +139,15 @@
             };
     }
 
-   
+    private Task Reset()
+    {
+        m_ProductDdl.Clear();
+        m_CategoryDdl.Clear();
+        m_PriorityDdl.Clear();
+        m_StatusDdl.Clear();
+        m_RaisedbyDdl.Clear();
+        Summary = string.Empty;
+
+        return m_DataGrid.ReloadServerData();
+    }
 }

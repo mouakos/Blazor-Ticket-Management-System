@@ -55,7 +55,7 @@
     private async Task HandleValidSubmit()
     {
         // Hier die Login-Logik implementieren
-        var verify = await AccountService.VerifyUser(Input.Email!, Input.Password!);
+        var verify = await AccountService.VerifyUserAsync(Input.Email!, Input.Password!);
         if (!verify.IsSuccess)
         {
             m_Alert?.ShowFailed(verify.ErrorMessage!);

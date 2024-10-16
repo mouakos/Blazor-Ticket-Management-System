@@ -22,7 +22,7 @@ public sealed class UnitOfWork(AppDbContext appDbContext, ITicketRepository tick
     {
         m_Repositories ??= new Hashtable();
         var type = typeof(TEntity).Name;
-        if (!m_Repositories.ContainsKey(type)) return (IGenericRepository<TEntity>)m_Repositories[type];
+        if (m_Repositories.ContainsKey(type)) return (IGenericRepository<TEntity>)m_Repositories[type];
         var repositoryType = typeof(GenericRepository<>);
         var repositoryInstance =
             Activator.CreateInstance(repositoryType.MakeGenericType(typeof(TEntity)), appDbContext);

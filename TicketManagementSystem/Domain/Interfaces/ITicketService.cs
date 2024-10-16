@@ -5,7 +5,7 @@ namespace Domain.Interfaces;
 
 public interface ITicketService
 {
-    List<TicketResponse> GetTickets(TicketRequest request);
+    List<TicketResponse> GetTickets(TicketRequest? request = null);
 
     TicketResponse? FindTicket(int ticketId);
 }

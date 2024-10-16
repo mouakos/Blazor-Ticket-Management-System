@@ -28,7 +28,7 @@ public class TicketRepository(AppDbContext appDbContext)
             query = query.Where(x => (EF.Functions.Like(x.Summary, $"%{request.Summary}%")));
         }
 
-        if (request is { ProductId: not null, PriorityId.Length: > 0 })
+        if (request is { ProductId: not null, ProductId.Length: > 0 })
             query = query.Where(x => request.ProductId.Contains(x.ProductId));
 
         if (request is { CategoryId: not null, CategoryId.Length: > 0 })
