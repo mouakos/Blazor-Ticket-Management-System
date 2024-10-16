@@ -18,7 +18,7 @@
     <MudButton StartIcon="@Icons.Material.Filled.ArrowBack" @onclick="BackToTicketList" Variant="Variant.Filled" Color="Color.Primary">
         <MudText>Back to list</MudText>
     </MudButton>
-    <MudButton Disabled="m_IsClosed" StartIcon="@Icons.Material.Filled.CheckCircle"  Variant="Variant.Filled" Color="Color.Error">
+    <MudButton Disabled="m_IsClosed" StartIcon="@Icons.Material.Filled.CheckCircle" @onclick="CloseTicket" Variant="Variant.Filled" Color="Color.Error">
         <MudText>Close</MudText>
     </MudButton>
 </div>
@@ -61,7 +61,7 @@
         </div>
         <div class="col-sm-2 action-panel">
             <MudStack Style="width: 100%" class="mt-5">
-                <Alert @ref="m_Alert"></Alert>
+                <Alert @ref="m_Alert"/>
                 @if (m_Errors.Length > 0)
                 {
                     <MudItem>
@@ -83,11 +83,17 @@
                             Update Ticket
                     </MudButton>
                 <MudTextField T="string" ReadOnly="true" Text="@m_Ticket.ExpectedDate.BeautifyDate()" Label="Expected Completion Date" Variant="Variant.Outlined"></MudTextField>
-                <Select @ref="m_ProductDdl" elements="@m_Products" label="Product"></Select>
-                <Select @ref="m_CategoryDdl" elements="@m_Categories" label="Category"></Select>
-                <Select @ref="m_AssignDdl" elements="@m_Users" label="Assign"></Select>
-                <Select @ref="m_PriorityDdl" elements="@m_Priorities" label="Priority"></Select>
-                <Select @ref="m_StatusDdl" elements="@m_Status" label="Status"></Select>
+                
+                @if (m_IsClosed)
+                {
+                    <MudTextField T="string" ReadOnly="true" Text="@m_Ticket.ClosedBy" Label="Closed By" Variant="Variant.Outlined"></MudTextField>
+                    <MudTextField T="string" ReadOnly="true" Text="@m_Ticket.ClosedDate.Value.BeautifyDate()" Label="Closed Date" Variant="Variant.Outlined"></MudTextField>
+                }
+                <Select @ref="m_ProductDdl" Elements="@m_Products" Label="Product"></Select>
+                <Select @ref="m_CategoryDdl" Elements="@m_Categories" Label="Category"></Select>
+                <Select @ref="m_AssignDdl" Elements="@m_Users" Label="Assign"></Select>
+                <Select @ref="m_PriorityDdl" Elements="@m_Priorities" Label="Priority"></Select>
+                <Select @ref="m_StatusDdl" Elements="@m_Status" Label="Status"></Select>
             </MudStack>
         </div>
     </div>
@@ -111,7 +117,7 @@
     private List<SelectItem> m_Status;
     private List<SelectItem> m_Users;
 
-    private bool m_IsClosed = false;
+    private bool m_IsClosed;
     private Alert m_Alert;
     private string?[] m_Errors = [];
 
@@ -132,10 +138,10 @@
 
     private void AssignTicketValue()
     {
-        m_ProductDdl.selectedValue = m_Ticket.ProductId.ToString();
-        m_PriorityDdl.selectedValue = m_Ticket.PriorityId.ToString();
-        m_CategoryDdl.selectedValue = m_Ticket.CategoryId.ToString();
-        m_StatusDdl.selectedValue = m_Ticket.Status;
+        m_ProductDdl.SelectedValue = m_Ticket.ProductId.ToString();
+        m_PriorityDdl.SelectedValue = m_Ticket.PriorityId.ToString();
+        m_CategoryDdl.SelectedValue = m_Ticket.CategoryId.ToString();
+        m_StatusDdl.SelectedValue = m_Ticket.Status;
 
         if (m_Ticket.ExpectedDate < DateTime.Now && m_Ticket.Status != Constants.c_StatusClosed)
         {
@@ -144,8 +150,11 @@
 
         if (m_Ticket.AssignedToId != null)
         {
-            m_AssignDdl.selectedValue = m_Ticket.AssignedToId.ToString();
+            m_AssignDdl.SelectedValue = m_Ticket.AssignedToId;
         }
+
+        if (m_Ticket.Status == Constants.c_StatusClosed)
+            m_IsClosed = true;
 
         StateHasChanged();
     }
@@ -176,16 +185,22 @@
         Nav.NavigateTo("/ticket");
     }
 
+    private async Task CloseTicket()
+    {
+        m_StatusDdl.SelectedValue = Constants.c_StatusClosed;
+        await Update();
+    }
+
     private async Task Update()
     {
         var request = new UpdateTicketRequest
         {
             TicketId = m_Ticket.TicketId,
-            ProductId = m_ProductDdl.selectedValue.ToNullableInteger(),
-            CategoryId = m_CategoryDdl.selectedValue.ToNullableInteger(),
-            PriorityId = m_PriorityDdl.selectedValue.ToNullableInteger(),
-            AssignedToId = m_AssignDdl.selectedValue,
-            Status = m_StatusDdl.selectedValue
+            ProductId = m_ProductDdl.SelectedValue.ToNullableInteger(),
+            CategoryId = m_CategoryDdl.SelectedValue.ToNullableInteger(),
+            PriorityId = m_PriorityDdl.SelectedValue.ToNullableInteger(),
+            AssignedToId = m_AssignDdl.SelectedValue,
+            Status = m_StatusDdl.SelectedValue
         };
 
         var validationHelper = new ValidationHelpers(request);

@@ -26,7 +26,7 @@ public class TicketService(IUnitOfWork unitOfWork, IHttpContextAccessor httpCont
             Status = x.Status,
             RaisedBy = x.User?.Email,
             CreatedDate = x.RaisedDate,
-            ExpectedDate = x.ExpectedDate
+            ExpectedDate = x.ExpectedDate,
         }).ToList();
     }
 
@@ -49,7 +49,9 @@ public class TicketService(IUnitOfWork unitOfWork, IHttpContextAccessor httpCont
             RaisedBy = ticket.User?.Id,
             RaisedByName = ticket.User?.Email,
             CreatedDate = ticket.RaisedDate,
-            ExpectedDate = ticket.ExpectedDate
+            ExpectedDate = ticket.ExpectedDate,
+            ClosedBy = ticket.ClosedBy,
+            ClosedDate = ticket.ClosedDate
         };
     }
 

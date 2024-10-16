@@ -1,14 +1,18 @@
 ﻿@if (m_ShowLeaveAlert)
 {
-    <MudAlert Severity="m_Severity" Variant="Variant.Filled" ShowCloseIcon="true" 
-              CloseIconClicked="(() => CloseMe())">@Message</MudAlert>
+    <MudAlert Severity="Severity"
+              Variant="Variant.Filled"
+              ShowCloseIcon="true"
+              CloseIconClicked="(() => CloseMe())">
+        @Message
+    </MudAlert>
 }
 
 @code {
+    [Parameter] public string Message { get; set; }
 
-    [Parameter] public string? Message { get; set; }
-    private bool m_ShowLeaveAlert;
-    private Severity m_Severity;
+    private bool m_ShowLeaveAlert = false;
+    private Severity Severity { get; set; }
 
     private void CloseMe()
     {
@@ -18,15 +22,16 @@
     public void ShowSuccess(string message)
     {
         Message = message;
-        m_Severity = Severity.Success;
+        Severity = Severity.Success;
         m_ShowLeaveAlert = true;
-        StateHasChanged();
+        StateHasChanged(); // Todo: Alert state change
     }
+
 
     public void ShowFailed(string message)
     {
         Message = message;
-        m_Severity = Severity.Error;
+        Severity = Severity.Error;
         m_ShowLeaveAlert = true;
         StateHasChanged();
     }

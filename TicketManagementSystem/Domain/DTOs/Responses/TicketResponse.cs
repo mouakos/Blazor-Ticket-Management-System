@@ -20,4 +20,6 @@ public class TicketResponse
     public string? RaisedByName { get; set; }
     public DateTime ExpectedDate { get; set; }
     public DateTime CreatedDate { get; set; }
+    public string? ClosedBy { get; set; }
+    public DateTime? ClosedDate { get; set; }
 }
