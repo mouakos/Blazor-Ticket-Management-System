@@ -19,6 +19,55 @@ public class TicketRepository(AppDbContext appDbContext)
     #region Public methods declaration
 
     /// <inheritdoc />
+    public List<ChartResponse> ChartByCategory(string category)
+    {
+        IQueryable<IGrouping<string, Ticket>> data;
+
+        category = category.ToLower();
+        switch (category)
+        {
+            case "category":
+                data = m_AppDbContext.Set<Ticket>().Include(x => x.Category).GroupBy(x => x.Category.Name);
+                break;
+            case "product":
+                data = m_AppDbContext.Set<Ticket>().Include(x => x.Product).GroupBy(x => x.Product.Name);
+                break;
+            case "priority":
+                data = m_AppDbContext.Set<Ticket>().Include(x => x.Priority).GroupBy(x => x.Priority.Name);
+                break;
+            default:
+                return null;
+        }
+
+        return data.Select(x => new ChartResponse
+        {
+            Label = x.Key,
+            Value = x.Count()
+        }).ToList();
+    }
+
+    /// <inheritdoc />
+    public List<ChartResponse> GetSummary()
+    {
+        return m_AppDbContext.Set<Ticket>()
+            .GroupBy(x => x.Status)
+            .Select(g => new ChartResponse
+            {
+                Label = g.Key,
+                Value = g.Count()
+            }).ToList();
+    }
+
+    /// <inheritdoc />
+    public Ticket? FindTicket(int ticketId)
+    {
+        return appDbContext.Set<Ticket>()
+            .Include(x => x.User)
+            .Include(x => x.Attachments)
+            .FirstOrDefault(x => x.Id == ticketId);
+    }
+
+    /// <inheritdoc />
     public List<Ticket> GetTickets(TicketRequest? request)
     {
         IQueryable<Ticket> query = m_AppDbContext.Set<Ticket>()
@@ -56,14 +105,14 @@ public class TicketRepository(AppDbContext appDbContext)
     {
         var startMonth = DateTime.Now.AddMonths(-11);
 
-        var query = appDbContext.Set<Ticket>()
+        var query = m_AppDbContext.Set<Ticket>()
             .Where(x => x.RaisedDate >= startMonth)
             .GroupBy(x => new { x.RaisedDate.Month, x.RaisedDate.Year })
             .Select(g => new
             {
                 g.Key.Month,
                 g.Key.Year,
-                Count = g.Count(),
+                Count = g.Count()
             })
             .OrderBy(x => x.Year).ThenBy(x => x.Month)
             .ToList();
@@ -73,46 +122,6 @@ public class TicketRepository(AppDbContext appDbContext)
             Label = new DateTime(x.Year, x.Month, 1).ToString("MMM yyyy"),
             Value = x.Count
         }).ToList();
-    }
-
-    /// <inheritdoc />
-    public List<ChartResponse> ChartByCategory(string category)
-    {
-        IQueryable<IGrouping<string, Ticket>> data;
-
-        category = category.ToLower();
-        switch (category)
-        {
-            case "category":
-                data = appDbContext.Set<Ticket>().Include(x => x.Category).GroupBy(x => x.Category.Name);
-                break;
-            case "product":
-                data = appDbContext.Set<Ticket>().Include(x => x.Product).GroupBy(x => x.Product.Name);
-                break;
-            case "priority":
-                data = appDbContext.Set<Ticket>().Include(x => x.Priority).GroupBy(x => x.Priority.Name);
-                break;
-            default:
-                return null;
-        }
-
-        return data.Select(x => new ChartResponse
-        {
-            Label = x.Key,
-            Value = x.Count()
-        }).ToList();
-    }
-
-    /// <inheritdoc />
-    public List<ChartResponse> GetSummary()
-    {
-        return appDbContext.Set<Ticket>()
-            .GroupBy(x => x.Status)
-            .Select(g => new ChartResponse
-            {
-                Label = g.Key,
-                Value = g.Count()
-            }).ToList();
     }
 
     #endregion

@@ -4,7 +4,10 @@ using Infrastructure.Data;
 
 namespace Infrastructure.Repositories;
 
-public sealed class UnitOfWork(AppDbContext appDbContext, ITicketRepository ticketRepository) : IUnitOfWork
+public sealed class UnitOfWork(
+    AppDbContext appDbContext,
+    ITicketRepository ticketRepository,
+    IDiscussionRepository discussionRepository) : IUnitOfWork
 {
     #region Private fields declaration
 
@@ -13,6 +16,9 @@ public sealed class UnitOfWork(AppDbContext appDbContext, ITicketRepository tick
     #endregion
 
     #region Public properties declaration
+
+    /// <inheritdoc />
+    public IDiscussionRepository DiscussionRepository => discussionRepository;
 
     /// <inheritdoc />
     public ITicketRepository TicketRepository => ticketRepository;

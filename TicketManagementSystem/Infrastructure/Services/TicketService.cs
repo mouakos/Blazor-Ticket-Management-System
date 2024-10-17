@@ -18,6 +18,12 @@ public class TicketService(
     #region Public methods declaration
 
     /// <inheritdoc />
+    public List<ChartResponse> ChartByCategory(string category)
+    {
+        return unitOfWork.TicketRepository.ChartByCategory(category);
+    }
+
+    /// <inheritdoc />
     public async Task<BaseResponse<int>> CreateTicketAsync(CreateTicketRequest request)
     {
         var createTicketResult = new BaseResponse<int> { IsSuccess = false };
@@ -101,10 +107,8 @@ public class TicketService(
     /// <inheritdoc />
     public TicketResponse? FindTicket(int ticketId)
     {
-        var ticket = unitOfWork.Repository<Ticket>().GetById(ticketId);
+        var ticket = unitOfWork.TicketRepository.FindTicket(ticketId);
         if (ticket is null) return null;
-
-        var attachments = unitOfWork.Repository<Attachment>().GetAll().Where(x => x.TicketId == ticket.Id).ToList();
 
         var attachmentPath = Path.Combine("uploads", "attachments");
         return new TicketResponse
@@ -117,18 +121,25 @@ public class TicketService(
             CategoryId = ticket.CategoryId,
             AssignedToId = ticket.AssignedToId,
             Status = ticket.Status,
+            RaisedByAvatar = ticket.User?.Avatar,
             RaisedBy = ticket.User?.Id,
             RaisedByName = ticket.User?.Email,
             CreatedDate = ticket.RaisedDate,
             ExpectedDate = ticket.ExpectedDate,
             ClosedBy = ticket.ClosedBy,
             ClosedDate = ticket.ClosedDate,
-            Attachments = attachments.Select(x => new AttachmentResponse
+            Attachments = ticket.Attachments?.Select(x => new AttachmentResponse
             {
                 FileName = x.FileName,
                 ServerFileName = Path.Combine(attachmentPath, x.ServerFileName)
             }).ToList()
         };
+    }
+
+    /// <inheritdoc />
+    public List<ChartResponse> GetSummary()
+    {
+        return unitOfWork.TicketRepository.GetSummary();
     }
 
     /// <inheritdoc />
@@ -148,6 +159,12 @@ public class TicketService(
             CreatedDate = x.RaisedDate,
             ExpectedDate = x.ExpectedDate
         }).ToList();
+    }
+
+    /// <inheritdoc />
+    public List<ChartResponse> Last12MonthTickets()
+    {
+        return unitOfWork.TicketRepository.Last12MonthTickets();
     }
 
     /// <inheritdoc />
@@ -191,24 +208,6 @@ public class TicketService(
             baseResponse.ErrorMessage = "Failed when saving to database! Try again later.";
 
         return baseResponse;
-    }
-
-    /// <inheritdoc />
-    public List<ChartResponse> Last12MonthTickets()
-    {
-        return unitOfWork.TicketRepository.Last12MonthTickets();
-    }
-
-    /// <inheritdoc />
-    public List<ChartResponse> ChartByCategory(string category)
-    {
-        return unitOfWork.TicketRepository.ChartByCategory(category);
-    }
-
-    /// <inheritdoc />
-    public List<ChartResponse> GetSummary()
-    {
-        return unitOfWork.TicketRepository.GetSummary();
     }
 
     #endregion

@@ -2,15 +2,15 @@
 @inherits LayoutComponentBase
 
 @* Required *@
-<MudThemeProvider Theme="m_MyCustomTheme" />
+<MudThemeProvider Theme="m_MyCustomTheme"/>
 @* <MudThemeProvider/> *@
- <MudPopoverProvider @rendermode = "InteractiveServer"/> 
+<MudPopoverProvider @rendermode="InteractiveServer"/>
 
 @* Needed for dialogs *@
- <MudDialogProvider @rendermode = "InteractiveServer"/> 
+<MudDialogProvider @rendermode="InteractiveServer"/>
 
 @* Needed for snackbars *@
- <MudSnackbarProvider @rendermode = "InteractiveServer"/> 
+<MudSnackbarProvider @rendermode="InteractiveServer"/>
 
 <div class="page">
     <div class="sidebar">
@@ -51,4 +51,5 @@
             Error = "#dc3545"
         }
     };
+
 }

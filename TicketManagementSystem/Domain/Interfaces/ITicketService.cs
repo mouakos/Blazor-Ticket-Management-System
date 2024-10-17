@@ -7,14 +7,15 @@ public interface ITicketService
 {
     #region Public methods declaration
 
+    List<ChartResponse> ChartByCategory(string category);
+
     Task<BaseResponse<int>> CreateTicketAsync(CreateTicketRequest request);
     TicketResponse? FindTicket(int ticketId);
+    List<ChartResponse> GetSummary();
     List<TicketResponse> GetTickets(TicketRequest? request = null);
-    Task<BaseResponse> UpdateTicketAsync(UpdateTicketRequest request);
 
     List<ChartResponse> Last12MonthTickets();
-    List<ChartResponse> ChartByCategory(string category);
-    List<ChartResponse> GetSummary();
+    Task<BaseResponse> UpdateTicketAsync(UpdateTicketRequest request);
 
     #endregion
 }

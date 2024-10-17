@@ -1,6 +1,4 @@
-﻿using Domain.Entities;
-
-namespace Domain.DTOs.Responses;
+﻿namespace Domain.DTOs.Responses;
 
 public class TicketResponse
 {
@@ -8,6 +6,7 @@ public class TicketResponse
 
     public string TicketIdView => $"T{TicketId.ToString().PadLeft(5, '0')}";
     public string? AssignedToId { get; set; }
+    public List<AttachmentResponse>? Attachments { get; set; }
     public string? Category { get; set; }
     public int CategoryId { get; set; }
     public string? ClosedBy { get; set; }
@@ -24,7 +23,7 @@ public class TicketResponse
     public string? Status { get; set; }
     public string? Summary { get; set; }
     public int TicketId { get; set; }
-    public List<AttachmentResponse>? Attachments { get; set; }
+    public string? RaisedByAvatar { get; set; }
 
     #endregion
 }

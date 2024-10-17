@@ -4,6 +4,8 @@ public interface IUnitOfWork : IDisposable
 {
     #region Public properties declaration
 
+    IDiscussionRepository DiscussionRepository { get; }
+
     ITicketRepository TicketRepository { get; }
 
     #endregion

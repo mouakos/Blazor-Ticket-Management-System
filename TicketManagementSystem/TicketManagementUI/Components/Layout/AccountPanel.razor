@@ -1,7 +1,5 @@
-﻿
-@using Infrastructure.Common
+﻿@using Infrastructure.Common
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
-
 @inject NavigationManager Nav
 @inject ProtectedSessionStorage ProtectedSessionStore
 
@@ -10,7 +8,7 @@
 <img @onclick="ProfileToggle" src="@m_AvatarSource" class="profile-img-btn" alt="Profile-img">
 
 
-<MudOverlay @bind-Visible="m_ShowPopUp" LightBackground AutoClose="true" />
+<MudOverlay @bind-Visible="m_ShowPopUp" LightBackground AutoClose="true"/>
 
 <div hidden="@(!m_ShowPopUp)" class="account-popup">
     <div class="header">
@@ -63,4 +61,5 @@
         ProfileToggle();
         Nav.NavigateTo(page, true);
     }
+
 }

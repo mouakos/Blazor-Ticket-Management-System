@@ -1,26 +1,24 @@
 ﻿.dashboard-status {
     border: 1px solid #eaeaea;
-    text-decoration: none;
-    color: var(--black);
     border-radius: 5px;
+    color: var(--black);
+    text-decoration: none;
 }
 
 .dashboard-status .header {
-    padding: 12px;
     border-bottom: 1px solid #eaeaea;
+    padding: 12px;
 }
 
-.dashboard-status .body {
-    padding: 12px;
-}
+.dashboard-status .body { padding: 12px; }
 
 .summary {
     border: 1px solid #eaeaea;
+    border-radius: 5px;
+    color: var(--black);
+    cursor: pointer;
     padding: 20px;
     text-decoration: none;
-    color: var(--black);
-    border-radius: 5px;
-    cursor: pointer;
 }
 
 .summary .counter {
@@ -29,8 +27,8 @@
 }
 
 .summary:hover {
-    color: var(--dark-green);
     border: 1px solid var(--dark-green);
+    color: var(--dark-green);
     transition: border-color 0.5s ease;
     transition: color 0.5s ease;
 }

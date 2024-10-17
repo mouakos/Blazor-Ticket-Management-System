@@ -9,149 +9,150 @@
 <SectionContent SectionName="page-title">Dashboard</SectionContent>
 
 <div class="container mt-3">
-	<div class="row">
-		<div class="col">
-			<a href="/ticket?filterStatus=NEW">
-				<div class="summary">
-					<div class="title">New</div>
-					<div class="counter">@m_NewCount</div>
-				</div>
-			</a>
-		</div>
-		<div class="col">
-			<a href="/ticket?filterStatus=OPEN">
-				<div class="summary">
-					<div class="title">Open</div>
-					<div class="counter">@m_OpenCount</div>
-				</div>
-			</a>
-		</div>
-		<div class="col">
-			<a href="/ticket?filterStatus=CLOSED">
-				<div class="summary">
-					<div class="title">Closed</div>
-					<div class="counter">@m_ClosedCount</div>
-				</div>
-			</a>
-		</div>
-		<div class="col">
-			<a href="/ticket">
-				<div class="summary">
-					<div class="title">Total</div>
-					<div class="counter">@m_TotalCount</div>
-				</div>
-			</a>
-		</div>
-	</div>
+    <div class="row">
+        <div class="col">
+            <a href="/ticket?filterStatus=NEW">
+                <div class="summary">
+                    <div class="title">New</div>
+                    <div class="counter">@m_NewCount</div>
+                </div>
+            </a>
+        </div>
+        <div class="col">
+            <a href="/ticket?filterStatus=OPEN">
+                <div class="summary">
+                    <div class="title">Open</div>
+                    <div class="counter">@m_OpenCount</div>
+                </div>
+            </a>
+        </div>
+        <div class="col">
+            <a href="/ticket?filterStatus=CLOSED">
+                <div class="summary">
+                    <div class="title">Closed</div>
+                    <div class="counter">@m_ClosedCount</div>
+                </div>
+            </a>
+        </div>
+        <div class="col">
+            <a href="/ticket">
+                <div class="summary">
+                    <div class="title">Total</div>
+                    <div class="counter">@m_TotalCount</div>
+                </div>
+            </a>
+        </div>
+    </div>
 
-	<div class="row mt-3">
-		<div class="col-md-9">
-			<div class="dashboard-status">
-				<div class="header">
-					<div class="title">Last 12 Months Tickets</div>
-				</div>
-				<div class="body">
-					<MudChart ChartType="ChartType.Line"
-							  ChartSeries="@m_Last12MonthSeries"
-							  ChartOptions="@m_Last12MonthOptions"
-							  XAxisLabels="@m_Last12MonthLabels"
-							  Width="100%">
-					</MudChart>
-				</div>
-			</div>
-		</div>
-		<div class="col-md-3">
-			<div class="dashboard-status">
-				<div class="header">
-					<div class="title">
-						<Select @ref="m_CategoryTypeDdl" Clearable="false" elements="@m_CategoryType" OnSelectChangedParent="HandleCategoryChartChange"></Select>
-					</div>
-					<div style="clear: both;"></div>
-				</div>
-				<div class="body">
-					<MudChart ChartType="ChartType.Pie"
-							  InputData="@m_ChartByCategoryValue"
-							  InputLabels="@m_ChartByCategoryLabel">
-					</MudChart>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="row mt-3">
+        <div class="col-md-9">
+            <div class="dashboard-status">
+                <div class="header">
+                    <div class="title">Last 12 Months Tickets</div>
+                </div>
+                <div class="body">
+                    <MudChart ChartType="ChartType.Line"
+                              ChartSeries="@m_Last12MonthSeries"
+                              ChartOptions="@m_Last12MonthOptions"
+                              XAxisLabels="@m_Last12MonthLabels"
+                              Width="100%">
+                    </MudChart>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="dashboard-status">
+                <div class="header">
+                    <div class="title">
+                        <Select @ref="m_CategoryTypeDdl" Clearable="false" elements="@m_CategoryType" OnSelectChangedParent="HandleCategoryChartChange"></Select>
+                    </div>
+                    <div style="clear: both;"></div>
+                </div>
+                <div class="body">
+                    <MudChart ChartType="ChartType.Pie"
+                              InputData="@m_ChartByCategoryValue"
+                              InputLabels="@m_ChartByCategoryLabel">
+                    </MudChart>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @code {
 
-	private List<ChartResponse> m_Last12MonthTickets;
-	private readonly List<ChartSeries> m_Last12MonthSeries = [];
-	private readonly ChartOptions m_Last12MonthOptions = new();
-	private string[] m_Last12MonthLabels = [];
+    private List<ChartResponse> m_Last12MonthTickets;
+    private readonly List<ChartSeries> m_Last12MonthSeries = [];
+    private readonly ChartOptions m_Last12MonthOptions = new();
+    private string[] m_Last12MonthLabels = [];
 
 
-	private List<ChartResponse> m_ChartByCategory = [];
-	Select m_CategoryTypeDdl;
-	private List<SelectItem> m_CategoryType = [];
-	double[] m_ChartByCategoryValue = [];
-	string[] m_ChartByCategoryLabel = [];
+    private List<ChartResponse> m_ChartByCategory = [];
+    Select m_CategoryTypeDdl;
+    private List<SelectItem> m_CategoryType = [];
+    double[] m_ChartByCategoryValue = [];
+    string[] m_ChartByCategoryLabel = [];
 
-	private List<ChartResponse> m_Summary = [];
-	private bool m_SummaryInitialized;
-	private int m_NewCount;
-	private int m_OpenCount;
-	private int m_ClosedCount;
-	private int m_TotalCount;
+    private List<ChartResponse> m_Summary = [];
+    private bool m_SummaryInitialized;
+    private int m_NewCount;
+    private int m_OpenCount;
+    private int m_ClosedCount;
+    private int m_TotalCount;
 
-	protected override void OnInitialized()
-	{
-		m_Last12MonthTickets = TicketService.Last12MonthTickets();
+    protected override void OnInitialized()
+    {
+        m_Last12MonthTickets = TicketService.Last12MonthTickets();
 
-		m_Last12MonthSeries.Add(new ChartSeries
-			{
-				Name = "Last 12 Month Tickets",
-				Data = m_Last12MonthTickets.Select(x => (double)x.Value).ToArray()
-			});
+        m_Last12MonthSeries.Add(new ChartSeries
+        {
+            Name = "Last 12 Month Tickets",
+            Data = m_Last12MonthTickets.Select(x => (double)x.Value).ToArray()
+        });
 
-		m_Last12MonthOptions.YAxisTicks = 5;
-		m_Last12MonthLabels = m_Last12MonthTickets.Select(x => x.Label).ToArray();
+        m_Last12MonthOptions.YAxisTicks = 5;
+        m_Last12MonthLabels = m_Last12MonthTickets.Select(x => x.Label).ToArray();
 
 
-		m_CategoryType =
+        m_CategoryType =
         [
             new SelectItem { Value = "Category", Text = "Category" },
             new SelectItem { Value = "Product", Text = "Product" },
             new SelectItem { Value = "Priority", Text = "Priority" }
         ];
 
-		m_ChartByCategory = TicketService.ChartByCategory("Category");
-		m_ChartByCategoryValue = m_ChartByCategory.Select(x => (double)x.Value).ToArray();
-		m_ChartByCategoryLabel = m_ChartByCategory.Select(x => x.Label).ToArray();
+        m_ChartByCategory = TicketService.ChartByCategory("Category");
+        m_ChartByCategoryValue = m_ChartByCategory.Select(x => (double)x.Value).ToArray();
+        m_ChartByCategoryLabel = m_ChartByCategory.Select(x => x.Label).ToArray();
 
-		m_Summary = TicketService.GetSummary();
-	}
+        m_Summary = TicketService.GetSummary();
+    }
 
-	protected override void OnAfterRender(bool firstRender)
-	{
-		if (firstRender)
-		{
-			if (m_CategoryTypeDdl.SelectedValue == null)
-				m_CategoryTypeDdl.SelectedValue = "Category";
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            if (m_CategoryTypeDdl.SelectedValue == null)
+                m_CategoryTypeDdl.SelectedValue = "Category";
 
 
-			if (!m_SummaryInitialized)
-			{
-				m_NewCount = m_Summary.FirstOrDefault(x => x.Label == Constants.c_StatusNew).Value;
-				m_OpenCount = m_Summary.FirstOrDefault(x => x.Label == Constants.c_StatusOpen).Value;
-				m_ClosedCount = m_Summary.FirstOrDefault(x => x.Label == Constants.c_StatusClosed).Value;
-				m_TotalCount = m_Summary.Sum(x => x.Value);
-			}
+            if (!m_SummaryInitialized)
+            {
+                m_NewCount = m_Summary.FirstOrDefault(x => x.Label == Constants.c_StatusNew).Value;
+                m_OpenCount = m_Summary.FirstOrDefault(x => x.Label == Constants.c_StatusOpen).Value;
+                m_ClosedCount = m_Summary.FirstOrDefault(x => x.Label == Constants.c_StatusClosed).Value;
+                m_TotalCount = m_Summary.Sum(x => x.Value);
+            }
 
-			StateHasChanged();
-		}
-	}
+            StateHasChanged();
+        }
+    }
 
-	private void HandleCategoryChartChange(string value)
-	{
-		m_ChartByCategory = TicketService.ChartByCategory(value);
-		m_ChartByCategoryValue = m_ChartByCategory.Select(x => (double)x.Value).ToArray();
-		m_ChartByCategoryLabel = m_ChartByCategory.Select(x => x.Label).ToArray();
-	}
+    private void HandleCategoryChartChange(string value)
+    {
+        m_ChartByCategory = TicketService.ChartByCategory(value);
+        m_ChartByCategoryValue = m_ChartByCategory.Select(x => (double)x.Value).ToArray();
+        m_ChartByCategoryLabel = m_ChartByCategory.Select(x => x.Label).ToArray();
+    }
+
 }

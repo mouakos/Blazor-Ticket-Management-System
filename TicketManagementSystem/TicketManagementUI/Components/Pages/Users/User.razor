@@ -14,9 +14,7 @@
 <SectionContent SectionName="page-title">User Managements</SectionContent>
 
 <style>
-    .mud-elevation-1 {
-        box-shadow: none !important;
-    }
+    .mud-elevation-1 { box-shadow: none !important; }
 </style>
 
 <MudButton Class="mt-2 ms-2" Color="Color.Primary" Variant="Variant.Filled" OnClick="AddNewUser">Add New User</MudButton>
@@ -26,8 +24,8 @@
              T="UserResponse"
              ServerData="ServerReload">
     <Columns>
-        <PropertyColumn Property="x => x.Email" />
-        <PropertyColumn Property="x => x.Role" />
+        <PropertyColumn Property="x => x.Email"/>
+        <PropertyColumn Property="x => x.Role"/>
         <PropertyColumn Property="x => x.AccountConfirmed">
             <CellTemplate>
                 @if (context.Item.AccountConfirmed)
@@ -42,12 +40,12 @@
         </PropertyColumn>
         <TemplateColumn CellClass="d-flex justify-end">
             <CellTemplate>
-                <MudButton Size="@Size.Small" Variant="@Variant.Filled" OnClick="@(() => this.RemoveUser(context))" StartIcon="@Icons.Material.Filled.Delete" Color="@Color.Error">Remove User</MudButton>
+                <MudButton Size="@Size.Small" Variant="@Variant.Filled" OnClick="@(() => RemoveUser(context))" StartIcon="@Icons.Material.Filled.Delete" Color="@Color.Error">Remove User</MudButton>
             </CellTemplate>
         </TemplateColumn>
     </Columns>
     <PagerContent>
-        <MudDataGridPager T="UserResponse" />
+        <MudDataGridPager T="UserResponse"/>
     </PagerContent>
 </MudDataGrid>
 
@@ -63,18 +61,18 @@
 
         var pagedData = data.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
         return new GridData<UserResponse>
-            {
-                TotalItems = totalItems,
-                Items = pagedData
-            };
+        {
+            TotalItems = totalItems,
+            Items = pagedData
+        };
     }
 
     private async Task AddNewUser()
     {
         var options = new DialogOptions
-            {
-                BackdropClick = false
-            };
+        {
+            BackdropClick = false
+        };
 
         var dialog = await DialogService.ShowAsync<UserRegister>("Add New User", options);
         var result = await dialog.Result;
@@ -102,4 +100,5 @@
             }
         }
     }
+
 }

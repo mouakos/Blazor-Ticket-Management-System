@@ -1,8 +1,8 @@
 ﻿@page "/avatar"
-@attribute [Authorize]
 @using Infrastructure.Common
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@attribute [Authorize]
 
 @inject IAccountService AccountService
 @inject ProtectedSessionStorage ProtectedSessionStore
@@ -16,7 +16,7 @@
         <MudCardContent>
             <MudGrid>
                 <MudItem sm="3">
-                    <MudImage Src="@m_AvatarSource" Width="100" Height="100" Style="border-radius:5px;" />
+                    <MudImage Src="@m_AvatarSource" Width="100" Height="100" Style="border-radius: 5px;"/>
                 </MudItem>
                 <MudItem sm="6" Class="content-center">
                     <MudFileUpload T="IBrowserFile" Accept=".jpg, .jpeg, .png" FilesChanged="UploadFiles">
@@ -28,13 +28,13 @@
                             </MudButton>
                         </ActivatorContent>
                     </MudFileUpload>
-                    <MudIconButton Class="ms-2" Icon="@Icons.Material.Filled.Delete" OnClick="@(() => ResetAvatar())" Variant="Variant.Filled" Color="Color.Error" Size="Size.Medium" />
+                    <MudIconButton Class="ms-2" Icon="@Icons.Material.Filled.Delete" OnClick="@(() => ResetAvatar())" Variant="Variant.Filled" Color="Color.Error" Size="Size.Medium"/>
                 </MudItem>
                 <MudItem>
                 </MudItem>
             </MudGrid>
 
-            <MudTextField Class="my-5" T="string" ReadOnly="true" Label="Email" @ref="m_MudEmail" />
+            <MudTextField Class="my-5" T="string" ReadOnly="true" Label="Email" @ref="m_MudEmail"/>
         </MudCardContent>
     </MudCard>
 </MudGrid>
@@ -88,4 +88,5 @@
             StateHasChanged();
         }
     }
+
 }

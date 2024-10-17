@@ -1,8 +1,6 @@
-﻿
-@using Domain.DTOs.Requests
+﻿@using Domain.DTOs.Requests
 @using Infrastructure.Common
 @using TicketManagementUI.Extensions.Helpers
-
 @inject IAccountService AccountService
 @inject ISnackbar Snackbar
 
@@ -13,7 +11,7 @@
         </MudText>
     </TitleContent>
     <DialogContent>
-        <Alert @ref="m_Alert" />
+        <Alert @ref="m_Alert"/>
 
         @if (m_Errors.Length > 0)
         {
@@ -28,7 +26,7 @@
             </MudItem>
         }
         <div>
-            <MudTextField @bind-Value="@Email" Variant="Variant.Outlined" Label="Email" />
+            <MudTextField @bind-Value="@Email" Variant="Variant.Outlined" Label="Email"/>
         </div>
         <div class="mt-2">
             <Select @ref="RoleDDL" elements="@m_Roles" placeholder="Role"></Select>
@@ -45,8 +43,7 @@
     private Alert m_Alert;
     string?[] m_Errors = [];
 
-    [CascadingParameter]
-    private MudDialogInstance MudDialog { get; set; }
+    [CascadingParameter] private MudDialogInstance MudDialog { get; set; }
 
     public string Email { get; set; }
     public Select RoleDDL { get; set; }
@@ -55,10 +52,10 @@
     private async Task RegisterUserAsync()
     {
         var request = new RegisterUserRequest
-            {
-                Email = Email,
-                Role = RoleDDL.SelectedValue
-            };
+        {
+            Email = Email,
+            Role = RoleDDL.SelectedValue
+        };
 
         var validationHelper = new ValidationHelpers(request);
         var isValid = validationHelper.Validate();

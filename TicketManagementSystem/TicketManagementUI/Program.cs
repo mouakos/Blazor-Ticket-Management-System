@@ -14,7 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
-	.AddInteractiveServerComponents();
+    .AddInteractiveServerComponents();
 
 /* Authentication */
 builder.Services.AddAuthorization();
@@ -22,21 +22,21 @@ builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddAuthentication().AddCookie(IdentityConstants.ApplicationScheme);
 
 builder.Services.AddIdentityCore<User>()
-	.AddRoles<IdentityRole>()
-	.AddEntityFrameworkStores<AppDbContext>()
-	.AddSignInManager();
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddSignInManager();
 
 builder.Services.ConfigureApplicationCookie(opt =>
 {
-	opt.LoginPath = "/login";
-	opt.AccessDeniedPath = "/access-denied";
+    opt.LoginPath = "/login";
+    opt.AccessDeniedPath = "/access-denied";
 });
 
 /* Database */
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
-	options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection") ??
-	                  throw new InvalidOperationException("Sorry, your connection is not found"));
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection") ??
+                      throw new InvalidOperationException("Sorry, your connection is not found"));
 });
 
 /* Services */
@@ -45,6 +45,8 @@ builder.Services.AddScoped<ICriteriaService, CriteriaService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 builder.Services.AddScoped<ITicketService, TicketService>();
+builder.Services.AddScoped<IDiscussionRepository, DiscussionRepository>();
+builder.Services.AddScoped<IDiscussionService, DiscussionService>();
 builder.Services.AddScoped(typeof(EncryptionHelper<>));
 
 /*MudBlazor*/
@@ -55,9 +57,9 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-	app.UseExceptionHandler("/Error", true);
-	// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-	app.UseHsts();
+    app.UseExceptionHandler("/Error", true);
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
 }
 
 app.UseHttpsRedirection();
@@ -69,6 +71,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorComponents<App>()
-	.AddInteractiveServerRenderMode();
+    .AddInteractiveServerRenderMode();
 
 app.Run();
