@@ -6,10 +6,10 @@ public interface ICriteriaService
 {
     #region Public methods declaration
 
-    List<Category> GetCategories();
-    List<Priority> GetPriorities();
-    List<Product> GetProducts();
-    List<string> GetStatus();
+    Task<List<Category>> GetCategoriesAsync();
+    Task<List<Priority>> GetPrioritiesAsync();
+    Task<List<Product>> GetProductsAsync();
+    Task<List<string>> GetStatusAsync();
 
     #endregion
 }

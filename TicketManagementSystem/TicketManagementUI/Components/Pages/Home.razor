@@ -100,9 +100,9 @@
     private int m_ClosedCount;
     private int m_TotalCount;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        m_Last12MonthTickets = TicketService.Last12MonthTickets();
+        m_Last12MonthTickets = await TicketService.Last12MonthTickets();
 
         m_Last12MonthSeries.Add(new ChartSeries
         {
@@ -121,11 +121,11 @@
             new SelectItem { Value = "Priority", Text = "Priority" }
         ];
 
-        m_ChartByCategory = TicketService.ChartByCategory("Category");
+        m_ChartByCategory = await TicketService.ChartByCategory("Category");
         m_ChartByCategoryValue = m_ChartByCategory.Select(x => (double)x.Value).ToArray();
         m_ChartByCategoryLabel = m_ChartByCategory.Select(x => x.Label).ToArray();
 
-        m_Summary = TicketService.GetSummary();
+        m_Summary = await TicketService.GetSummaryAsync();
     }
 
     protected override void OnAfterRender(bool firstRender)
@@ -148,9 +148,9 @@
         }
     }
 
-    private void HandleCategoryChartChange(string value)
+    private async Task HandleCategoryChartChange(string value)
     {
-        m_ChartByCategory = TicketService.ChartByCategory(value);
+        m_ChartByCategory = await TicketService.ChartByCategory(value);
         m_ChartByCategoryValue = m_ChartByCategory.Select(x => (double)x.Value).ToArray();
         m_ChartByCategoryLabel = m_ChartByCategory.Select(x => x.Label).ToArray();
     }

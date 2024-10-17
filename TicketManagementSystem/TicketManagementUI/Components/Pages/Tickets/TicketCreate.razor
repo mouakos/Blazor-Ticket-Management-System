@@ -11,7 +11,7 @@
 @inject ITicketService TicketService
 @inject NavigationManager Nav
 
-<SectionContent SectionName="page-title">Create a New Ticket</SectionContent>
+<SectionContent SectionName="page-title">CreateDiscussionAsync a New Ticket</SectionContent>
 
 <div class="head-panel">
     <MudButton StartIcon="@Icons.Material.Filled.ArrowBack" @onclick="BackToTicketList" Variant="Variant.Filled" Color="Color.Primary">
@@ -106,7 +106,7 @@
                            FullWidth="true"
                            EndIcon="@Icons.Material.Filled.Save"
                            Color="Color.Primary">
-                    Create Ticket
+                    CreateDiscussionAsync Ticket
                 </MudButton>
                 <Select @ref="m_ProductDdl" elements="@m_Products" label="Product"></Select>
                 <Select @ref="m_CategoryDdl" elements="@m_Categories" label="Category"></Select>
@@ -136,28 +136,28 @@
 
     private readonly IList<IBrowserFile> m_Files = new List<IBrowserFile>();
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-        InitializeDropdown();
-        return Task.CompletedTask;
+        await InitializeDropdownAsync();
     }
 
-    private void InitializeDropdown()
+    private async Task InitializeDropdownAsync()
     {
-        m_Products = CriteriaService.GetProducts()
+        m_Products = (await CriteriaService.GetProductsAsync())
             .Select(x => new SelectItem { Value = x.Id.ToString(), Text = x.Name })
             .ToList();
 
 
-        m_Priorities = CriteriaService.GetPriorities()
+        m_Priorities = (await CriteriaService.GetPrioritiesAsync())
             .Select(x => new SelectItem { Value = x.Id.ToString(), Text = x.Name })
             .ToList();
 
-        m_Categories = CriteriaService.GetCategories()
+        m_Categories = (await CriteriaService.GetCategoriesAsync())
             .Select(x => new SelectItem { Value = x.Id.ToString(), Text = x.Name })
             .ToList();
 
-        m_Users = AccountService.GetUsers().Select(x => new SelectItem { Value = x.Id, Text = x.Email }).ToList();
+
+        m_Users = (await AccountService.GetUsersAsync()).Select(x => new SelectItem { Value = x.Id, Text = x.Email }).ToList();
     }
 
 

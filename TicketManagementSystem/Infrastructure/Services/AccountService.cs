@@ -82,9 +82,9 @@ public class AccountService(
     }
 
     /// <inheritdoc />
-    public List<UserResponse> GetUsers()
+    public async Task<List<UserResponse>> GetUsersAsync()
     {
-        var roles = unitOfWork.Repository<IdentityUserRole<string>>().GetAll()
+        var roles = (await unitOfWork.Repository<IdentityUserRole<string>>().GetAllAsync())
             .Select(x => new
             {
                 x.UserId,
@@ -92,7 +92,7 @@ public class AccountService(
                 Role = Constants.UserRoles[x.RoleId]
             });
 
-        return unitOfWork.Repository<User>().GetAll()
+        return (await unitOfWork.Repository<User>().GetAllAsync())
             .Where(x => x.IsDeleted == false)
             .Select(x => new UserResponse
             {
@@ -262,7 +262,7 @@ public class AccountService(
             user.AccountConfirmed = true;
 
             unitOfWork.Repository<User>().Update(user);
-            await unitOfWork.SaveChanges();
+            await unitOfWork.SaveChangesAsync();
         }
     }
 

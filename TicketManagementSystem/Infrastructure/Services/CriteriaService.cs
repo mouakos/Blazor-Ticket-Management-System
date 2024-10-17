@@ -9,32 +9,33 @@ public class CriteriaService(IUnitOfWork unitOfWork) : ICriteriaService
     #region Public methods declaration
 
     /// <inheritdoc />
-    public List<Category> GetCategories()
+    public async Task<List<Category>> GetCategoriesAsync()
     {
-        return unitOfWork.Repository<Category>().GetAll();
+        return await unitOfWork.Repository<Category>().GetAllAsync();
     }
 
     /// <inheritdoc />
-    public List<Priority> GetPriorities()
+    public async Task<List<Priority>> GetPrioritiesAsync()
     {
-        return unitOfWork.Repository<Priority>().GetAll();
+        return await unitOfWork.Repository<Priority>().GetAllAsync();
     }
 
     /// <inheritdoc />
-    public List<Product> GetProducts()
+    public async Task<List<Product>> GetProductsAsync()
     {
-        return unitOfWork.Repository<Product>().GetAll();
+        return await unitOfWork.Repository<Product>().GetAllAsync();
     }
 
     /// <inheritdoc />
-    public List<string> GetStatus()
+    public async Task<List<string>> GetStatusAsync()
     {
-        return
+        List<string> status =
         [
             "NEW",
             "OPEN",
             "CLOSED"
         ];
+        return await Task.FromResult(status);
     }
 
     #endregion

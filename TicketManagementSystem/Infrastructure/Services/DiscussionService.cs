@@ -16,7 +16,7 @@ public class DiscussionService(
     #region Public methods declaration
 
     /// <inheritdoc />
-    public async Task<BaseResponse> Create(DiscussionRequest request)
+    public async Task<BaseResponse> CreateDiscussionAsync(DiscussionRequest request)
     {
         var response = new BaseResponse
         {
@@ -66,7 +66,7 @@ public class DiscussionService(
                 unitOfWork.Repository<Attachment>().Add(attachment);
             }
 
-        var result = await unitOfWork.SaveChangesReturnBool();
+        var result = await unitOfWork.SaveChangesAsync();
 
         if (result)
             response.IsSuccess = true;
@@ -77,13 +77,13 @@ public class DiscussionService(
     }
 
     /// <inheritdoc />
-    public List<DiscussionResponse> GetDiscussions(int ticketId)
+    public async Task<List<DiscussionResponse>> GetDiscussionsAsync(int ticketId)
     {
         var uploadPath = Path.Combine("uploads", "attachments");
 
-        var result = discussionRepository.GetDiscussions(ticketId);
+        var discussions = await discussionRepository.GetDiscussionsAsync(ticketId);
 
-        return result.Select(x => new DiscussionResponse
+        return discussions.Select(x => new DiscussionResponse
         {
             Message = x.Message,
             CreatedDate = x.CreatedDate,

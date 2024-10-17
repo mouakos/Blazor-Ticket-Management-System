@@ -7,8 +7,8 @@ public interface IDiscussionService
 {
     #region Public methods declaration
 
-    Task<BaseResponse> Create(DiscussionRequest request);
-    List<DiscussionResponse> GetDiscussions(int ticketId);
+    Task<BaseResponse> CreateDiscussionAsync(DiscussionRequest request);
+    Task<List<DiscussionResponse>> GetDiscussionsAsync(int ticketId);
 
     #endregion
 }

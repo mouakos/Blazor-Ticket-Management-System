@@ -66,7 +66,7 @@
         <PropertyColumn Property="x => x.Status"/>
         <PropertyColumn Property="x => x.RaisedBy" Title="Raised By"/>
         <PropertyColumn Property="x => x.ExpectedDate" Title="Expected Date" Format="dd MMM yyyy"/>
-        <PropertyColumn Property="x => x.CreatedDate" Title="Created Date" Format="dd MMM yyyy"/>
+        <PropertyColumn Property="x => x.CreatedDate" Title="CreateDiscussionAsyncd Date" Format="dd MMM yyyy"/>
     </Columns>
     <PagerContent>
         <MudDataGridPager T="TicketResponse"/>
@@ -92,31 +92,30 @@
     private List<SelectItem> m_Status;
     private List<SelectItem> m_Raisedby;
 
-    protected override Task OnInitializedAsync()
+    protected  override async Task OnInitializedAsync()
     {
-        InitializeDropdown();
-        return Task.CompletedTask;
+        await InitializeDropdownAsync();
     }
 
-    private void InitializeDropdown()
+    private async Task InitializeDropdownAsync()
     {
-        m_Products = CriteriaService.GetProducts()
+        m_Products = (await CriteriaService.GetProductsAsync())
             .Select(x => new SelectItem { Value = x.Id.ToString(), Text = x.Name })
             .ToList();
 
 
-        m_Priorities = CriteriaService.GetPriorities()
+        m_Priorities = (await CriteriaService.GetPrioritiesAsync())
             .Select(x => new SelectItem { Value = x.Id.ToString(), Text = x.Name })
             .ToList();
 
-        m_Categories = CriteriaService.GetCategories()
+        m_Categories = (await CriteriaService.GetCategoriesAsync())
             .Select(x => new SelectItem { Value = x.Id.ToString(), Text = x.Name })
             .ToList();
 
 
-        m_Status = CriteriaService.GetStatus().Select(x => new SelectItem { Value = x, Text = x }).ToList();
+        m_Status = (await CriteriaService.GetStatusAsync()).Select(x => new SelectItem { Value = x, Text = x }).ToList();
 
-        m_Raisedby = AccountService.GetUsers().Select(x => new SelectItem { Value = x.Id, Text = x.Email }).ToList();
+        m_Raisedby = (await AccountService.GetUsersAsync()).Select(x => new SelectItem { Value = x.Id, Text = x.Email }).ToList();
     }
 
     private async Task<GridData<TicketResponse>> ServerReload(GridState<TicketResponse> state)
@@ -128,7 +127,7 @@
             StateHasChanged();
         }
 
-        IEnumerable<TicketResponse> getTickets = TicketService.GetTickets(new TicketRequest
+        IEnumerable<TicketResponse> getTickets = await TicketService.GetTickets(new TicketRequest
         {
             Summary = Summary,
             ProductId = m_ProductDdl.Options.Select(int.Parse).ToArray(),

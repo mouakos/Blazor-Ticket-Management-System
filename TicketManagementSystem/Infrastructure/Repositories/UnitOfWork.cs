@@ -38,23 +38,18 @@ public sealed class UnitOfWork(
     {
         m_Repositories ??= new Hashtable();
         var type = typeof(TEntity).Name;
-        if (m_Repositories.ContainsKey(type)) return (IGenericRepository<TEntity>)m_Repositories[type];
+        if (m_Repositories.ContainsKey(type)) return (IGenericRepository<TEntity>)m_Repositories[type]!;
         var repositoryType = typeof(GenericRepository<>);
         var repositoryInstance =
             Activator.CreateInstance(repositoryType.MakeGenericType(typeof(TEntity)), appDbContext);
         m_Repositories.Add(type, repositoryInstance);
 
-        return (IGenericRepository<TEntity>)m_Repositories[type];
+        return (IGenericRepository<TEntity>)m_Repositories[type]!;
     }
 
-    /// <inheritdoc />
-    public async Task<int> SaveChanges()
-    {
-        return await appDbContext.SaveChangesAsync();
-    }
 
     /// <inheritdoc />
-    public async Task<bool> SaveChangesReturnBool()
+    public async Task<bool> SaveChangesAsync()
     {
         return await appDbContext.SaveChangesAsync() > 0;
     }

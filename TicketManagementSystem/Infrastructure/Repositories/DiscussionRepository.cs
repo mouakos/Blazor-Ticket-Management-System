@@ -17,14 +17,14 @@ public class DiscussionRepository(AppDbContext appDbContext)
     #region Public methods declaration
 
     /// <inheritdoc />
-    public List<Discussion> GetDiscussions(int ticketId)
+    public async Task<List<Discussion>> GetDiscussionsAsync(int ticketId)
     {
-        return m_AppDbContext.Set<Discussion>()
+        return await m_AppDbContext.Set<Discussion>()
             .Include(x => x.Attachments)
             .Include(x => x.User)
             .Where(x => x.TicketId == ticketId)
             .OrderBy(x => x.CreatedDate)
-            .ToList();
+            .ToListAsync();
     }
 
     #endregion

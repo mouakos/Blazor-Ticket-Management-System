@@ -18,9 +18,9 @@ public class TicketService(
     #region Public methods declaration
 
     /// <inheritdoc />
-    public List<ChartResponse> ChartByCategory(string category)
+    public async Task<List<ChartResponse>> ChartByCategory(string category)
     {
-        return unitOfWork.TicketRepository.ChartByCategory(category);
+        return await unitOfWork.TicketRepository.ChartByCategory(category);
     }
 
     /// <inheritdoc />
@@ -53,7 +53,7 @@ public class TicketService(
                 Status = Constants.c_StatusNew
             };
 
-            var priority = unitOfWork.Repository<Priority>().GetById(request.PriorityId.Value);
+            var priority = await unitOfWork.Repository<Priority>().GetByIdAsync(request.PriorityId.Value);
             if (priority != null) ticket.ExpectedDate = DateTime.Now.AddDays(priority.ExpectedDays);
 
             unitOfWork.TicketRepository.Add(ticket);
@@ -83,7 +83,7 @@ public class TicketService(
                     unitOfWork.Repository<Attachment>().Add(attachment);
                 }
 
-            var result = await unitOfWork.SaveChangesReturnBool();
+            var result = await unitOfWork.SaveChangesAsync();
 
             if (result)
             {
@@ -105,9 +105,9 @@ public class TicketService(
     }
 
     /// <inheritdoc />
-    public TicketResponse? FindTicket(int ticketId)
+    public async Task<TicketResponse?> FindTicketAsync(int ticketId)
     {
-        var ticket = unitOfWork.TicketRepository.FindTicket(ticketId);
+        var ticket = await unitOfWork.TicketRepository.FindTicketAsync(ticketId);
         if (ticket is null) return null;
 
         var attachmentPath = Path.Combine("uploads", "attachments");
@@ -137,15 +137,15 @@ public class TicketService(
     }
 
     /// <inheritdoc />
-    public List<ChartResponse> GetSummary()
+    public async Task<List<ChartResponse>> GetSummaryAsync()
     {
-        return unitOfWork.TicketRepository.GetSummary();
+        return await unitOfWork.TicketRepository.GetSummaryAsync();
     }
 
     /// <inheritdoc />
-    public List<TicketResponse> GetTickets(TicketRequest? request = null)
+    public async Task<List<TicketResponse>> GetTickets(TicketRequest? request = null)
     {
-        var tickets = unitOfWork.TicketRepository.GetTickets(request);
+        var tickets = await unitOfWork.TicketRepository.GetTicketsAsync(request);
         return tickets.Select(x => new TicketResponse
         {
             TicketId = x.Id,
@@ -162,16 +162,16 @@ public class TicketService(
     }
 
     /// <inheritdoc />
-    public List<ChartResponse> Last12MonthTickets()
+    public async Task<List<ChartResponse>> Last12MonthTickets()
     {
-        return unitOfWork.TicketRepository.Last12MonthTickets();
+        return await unitOfWork.TicketRepository.GetLast12MonthTicketsAsync();
     }
 
     /// <inheritdoc />
     public async Task<BaseResponse> UpdateTicketAsync(UpdateTicketRequest request)
     {
         var baseResponse = new BaseResponse { IsSuccess = false };
-        var currentTicket = unitOfWork.TicketRepository.GetById(request.TicketId);
+        var currentTicket = await unitOfWork.TicketRepository.GetByIdAsync(request.TicketId);
         if (currentTicket is null)
         {
             baseResponse.ErrorMessage = "Ticket not found!";
@@ -201,7 +201,7 @@ public class TicketService(
         }
 
         unitOfWork.TicketRepository.Update(currentTicket);
-        var dbResult = await unitOfWork.SaveChangesReturnBool();
+        var dbResult = await unitOfWork.SaveChangesAsync();
         if (dbResult)
             baseResponse.IsSuccess = true;
         else

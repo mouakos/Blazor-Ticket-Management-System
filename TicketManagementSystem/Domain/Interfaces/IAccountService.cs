@@ -16,7 +16,7 @@ public interface IAccountService
 
     Task<BaseResponse<User>> GetCurrentUserAsync();
 
-    List<UserResponse> GetUsers();
+    Task<List<UserResponse>> GetUsersAsync();
 
     /// <summary>
     ///     Registers a new user with the specified request.

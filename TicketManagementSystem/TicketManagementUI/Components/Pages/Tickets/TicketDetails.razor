@@ -82,7 +82,7 @@
                 }
             </div>
             <hr/>
-            <CreateDiscussions TicketId="ticketId" OnNotifyParent="RefreshDiscussion"/>
+            <CreateDiscussions TicketId="ticketId" OnNotifyParent="RefreshDiscussionAsync"/>
             <hr/>
             <ViewDiscussions Discussions="@m_Discussions"/>
         </div>
@@ -148,12 +148,11 @@
     private string?[] m_Errors = [];
     private List<DiscussionResponse>? m_Discussions;
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-        m_Ticket = TicketService.FindTicket(ticketId);
-        InitializeDropdown();
-        m_Discussions = DiscussionService.GetDiscussions(ticketId);
-        return Task.CompletedTask;
+        m_Ticket = await TicketService.FindTicketAsync(ticketId);
+        await InitializeDropdownAsync();
+        m_Discussions = await DiscussionService.GetDiscussionsAsync(ticketId);
     }
 
     protected override void OnAfterRender(bool firstRender)
@@ -187,25 +186,25 @@
         StateHasChanged();
     }
 
-    private void InitializeDropdown()
+    private async Task InitializeDropdownAsync()
     {
-        m_Products = CriteriaService.GetProducts()
+        m_Products = (await CriteriaService.GetProductsAsync())
             .Select(x => new SelectItem { Value = x.Id.ToString(), Text = x.Name })
             .ToList();
 
 
-        m_Priorities = CriteriaService.GetPriorities()
+        m_Priorities = (await CriteriaService.GetPrioritiesAsync())
             .Select(x => new SelectItem { Value = x.Id.ToString(), Text = x.Name })
             .ToList();
 
-        m_Categories = CriteriaService.GetCategories()
+        m_Categories = (await CriteriaService.GetCategoriesAsync())
             .Select(x => new SelectItem { Value = x.Id.ToString(), Text = x.Name })
             .ToList();
 
 
-        m_Status = CriteriaService.GetStatus().Select(x => new SelectItem { Value = x, Text = x }).ToList();
+        m_Status = (await CriteriaService.GetStatusAsync()).Select(x => new SelectItem { Value = x, Text = x }).ToList();
 
-        m_Users = AccountService.GetUsers().Select(x => new SelectItem { Value = x.Id, Text = x.Email }).ToList();
+        m_Users = (await AccountService.GetUsersAsync()).Select(x => new SelectItem { Value = x.Id, Text = x.Email }).ToList();
     }
 
     private void BackToTicketList()
@@ -242,7 +241,7 @@
             {
                 m_Alert.ShowSuccess("Successfully update the ticket!");
 
-                m_Ticket = TicketService.FindTicket(ticketId);
+                m_Ticket = await TicketService.FindTicketAsync(ticketId);
                 AssignTicketValue();
             }
             else
@@ -252,9 +251,9 @@
         }
     }
 
-    private void RefreshDiscussion()
+    private async Task RefreshDiscussionAsync()
     {
-        m_Discussions = DiscussionService.GetDiscussions(ticketId);
+        m_Discussions = await DiscussionService.GetDiscussionsAsync(ticketId);
         StateHasChanged();
     }
 

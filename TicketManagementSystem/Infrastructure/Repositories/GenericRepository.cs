@@ -23,28 +23,21 @@ public class GenericRepository<T>(AppDbContext appDbContext) : IGenericRepositor
     }
 
     /// <inheritdoc />
-    public List<T> GetAll()
+    public async Task<List<T>> GetAllAsync()
     {
-        return appDbContext.Set<T>().ToList();
+        return await appDbContext.Set<T>().AsNoTracking().ToListAsync();
     }
 
     /// <inheritdoc />
-    public T? GetById(int id)
+    public async Task<T?> GetByIdAsync(int id)
     {
-        return appDbContext.Set<T>().Find(id);
-    }
-
-    /// <inheritdoc />
-    public void SaveChanges()
-    {
-        appDbContext.SaveChanges();
+        return await appDbContext.Set<T>().FindAsync(id);
     }
 
     /// <inheritdoc />
     public void Update(T entity)
     {
-        appDbContext.Set<T>().Attach(entity);
-        appDbContext.Entry(entity).State = EntityState.Modified;
+        appDbContext.Set<T>().Update(entity);
     }
 
     #endregion

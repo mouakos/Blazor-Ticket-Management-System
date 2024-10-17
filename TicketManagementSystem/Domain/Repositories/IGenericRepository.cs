@@ -6,9 +6,8 @@ public interface IGenericRepository<T> where T : class
 
     void Add(T entity);
     void Delete(T entity);
-    List<T> GetAll();
-    T? GetById(int id);
-    void SaveChanges();
+    Task<List<T>> GetAllAsync();
+    Task<T?> GetByIdAsync(int id);
     void Update(T entity);
 
     #endregion

@@ -19,7 +19,7 @@ public class TicketRepository(AppDbContext appDbContext)
     #region Public methods declaration
 
     /// <inheritdoc />
-    public List<ChartResponse> ChartByCategory(string category)
+    public async Task<List<ChartResponse>> ChartByCategory(string category)
     {
         IQueryable<IGrouping<string, Ticket>> data;
 
@@ -39,36 +39,36 @@ public class TicketRepository(AppDbContext appDbContext)
                 return null;
         }
 
-        return data.Select(x => new ChartResponse
+        return await data.Select(x => new ChartResponse
         {
             Label = x.Key,
             Value = x.Count()
-        }).ToList();
+        }).ToListAsync();
     }
 
     /// <inheritdoc />
-    public List<ChartResponse> GetSummary()
+    public async Task<List<ChartResponse>> GetSummaryAsync()
     {
-        return m_AppDbContext.Set<Ticket>()
+        return await m_AppDbContext.Set<Ticket>()
             .GroupBy(x => x.Status)
             .Select(g => new ChartResponse
             {
                 Label = g.Key,
                 Value = g.Count()
-            }).ToList();
+            }).ToListAsync();
     }
 
     /// <inheritdoc />
-    public Ticket? FindTicket(int ticketId)
+    public async Task<Ticket?> FindTicketAsync(int ticketId)
     {
-        return appDbContext.Set<Ticket>()
+        return await appDbContext.Set<Ticket>()
             .Include(x => x.User)
             .Include(x => x.Attachments)
-            .FirstOrDefault(x => x.Id == ticketId);
+            .FirstOrDefaultAsync(x => x.Id == ticketId);
     }
 
     /// <inheritdoc />
-    public List<Ticket> GetTickets(TicketRequest? request)
+    public async Task<List<Ticket>> GetTicketsAsync(TicketRequest? request)
     {
         IQueryable<Ticket> query = m_AppDbContext.Set<Ticket>()
             .Include(x => x.Category)
@@ -77,7 +77,7 @@ public class TicketRepository(AppDbContext appDbContext)
             .Include(x => x.User)
             .Include(x => x.AssignedTo);
 
-        if (request is null) return query.ToList();
+        if (request is null) return await query.ToListAsync();
 
         if (!string.IsNullOrWhiteSpace(request.Summary))
             query = query.Where(x => EF.Functions.Like(x.Summary, $"%{request.Summary}%"));
@@ -97,15 +97,15 @@ public class TicketRepository(AppDbContext appDbContext)
         if (request is { RaisedBy: not null, RaisedBy.Length: > 0 })
             query = query.Where(x => request.RaisedBy.Contains(x.RaisedBy));
 
-        return query.OrderByDescending(x => x.RaisedDate).ToList();
+        return await query.OrderByDescending(x => x.RaisedDate).ToListAsync();
     }
 
     /// <inheritdoc />
-    public List<ChartResponse> Last12MonthTickets()
+    public async Task<List<ChartResponse>> GetLast12MonthTicketsAsync()
     {
         var startMonth = DateTime.Now.AddMonths(-11);
 
-        var query = m_AppDbContext.Set<Ticket>()
+        var query = await m_AppDbContext.Set<Ticket>()
             .Where(x => x.RaisedDate >= startMonth)
             .GroupBy(x => new { x.RaisedDate.Month, x.RaisedDate.Year })
             .Select(g => new
@@ -115,7 +115,7 @@ public class TicketRepository(AppDbContext appDbContext)
                 Count = g.Count()
             })
             .OrderBy(x => x.Year).ThenBy(x => x.Month)
-            .ToList();
+            .ToListAsync();
 
         return query.Select(x => new ChartResponse
         {

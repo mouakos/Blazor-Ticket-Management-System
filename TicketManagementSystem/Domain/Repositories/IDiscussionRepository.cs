@@ -6,7 +6,7 @@ public interface IDiscussionRepository : IGenericRepository<Discussion>
 {
     #region Public methods declaration
 
-    List<Discussion> GetDiscussions(int ticketId);
+    Task<List<Discussion>> GetDiscussionsAsync(int ticketId);
 
     #endregion
 }

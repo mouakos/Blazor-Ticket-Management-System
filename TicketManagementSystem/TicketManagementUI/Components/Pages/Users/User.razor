@@ -54,7 +54,7 @@
 
     private async Task<GridData<UserResponse>> ServerReload(GridState<UserResponse> state)
     {
-        var data = AccountService.GetUsers();
+        var data = await AccountService.GetUsersAsync();
         await Task.Delay(300);
 
         var totalItems = data.Count();

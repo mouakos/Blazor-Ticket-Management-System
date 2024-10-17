@@ -8,11 +8,11 @@ public interface ITicketRepository : IGenericRepository<Ticket>
 {
     #region Public methods declaration
 
-    List<ChartResponse> ChartByCategory(string category);
-    List<ChartResponse> GetSummary();
-    Ticket? FindTicket(int ticketId);
-    List<Ticket> GetTickets(TicketRequest? request);
-    List<ChartResponse> Last12MonthTickets();
+    Task<List<ChartResponse>> ChartByCategory(string category);
+    Task<List<ChartResponse>> GetSummaryAsync();
+    Task<Ticket?> FindTicketAsync(int ticketId);
+    Task<List<Ticket>> GetTicketsAsync(TicketRequest? request);
+    Task<List<ChartResponse>> GetLast12MonthTicketsAsync();
 
     #endregion
 }

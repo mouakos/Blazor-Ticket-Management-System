@@ -13,8 +13,7 @@ public interface IUnitOfWork : IDisposable
     #region Public methods declaration
 
     IGenericRepository<TEntity> Repository<TEntity>() where TEntity : class;
-    Task<int> SaveChanges();
-    Task<bool> SaveChangesReturnBool();
+    Task<bool> SaveChangesAsync();
 
     #endregion
 }
