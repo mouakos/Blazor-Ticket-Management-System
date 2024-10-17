@@ -1,0 +1,6 @@
+﻿.content-center {
+    display: flex;
+    justify-content: center;
+    -webkit-align-items: center;
+    align-items: center;
+}

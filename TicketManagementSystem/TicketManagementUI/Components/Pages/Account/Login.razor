@@ -1,12 +1,14 @@
 ﻿@page "/login"
 @using System.ComponentModel.DataAnnotations
 @using Domain.Entities
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @using Microsoft.AspNetCore.Identity
 @layout EmptyLayout
 @inject SignInManager<User> SignInManager
 @inject IAccountService AccountService
 @inject NavigationManager NavigationManager
 @inject EncryptionHelper<LoginDto> Encryption
+@inject ProtectedSessionStorage ProtectedSessionStorage
 
 @rendermode InteractiveServer
 
@@ -62,6 +64,11 @@
         }
 
         var loginData = new LoginDto { UserName = verify.Value, Password = Input.Password, RememberMe = Input.Remember };
+        var user = await SignInManager.UserManager.FindByEmailAsync(verify.Value);
+        await ProtectedSessionStorage.SetAsync("avatar", user.Avatar);
+        await ProtectedSessionStorage.SetAsync("email", user.Email);
+        await ProtectedSessionStorage.SetAsync("accountconfirmed", user.AccountConfirmed);
+
         var payload = Encryption.Encode(loginData);
         NavigationManager.NavigateTo($"processor/{payload}");
     }

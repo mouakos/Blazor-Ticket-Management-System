@@ -1,0 +1,71 @@
+﻿.account-popup {
+    position: absolute;
+    top: 50px;
+    right: 40px;
+    width: 300px;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    z-index: 9999;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.profile-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+
+.profile-img-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.user-info h2 {
+    font-size: 18px;
+    margin: 0;
+}
+
+.user-info p {
+    margin: 0;
+    color: #888;
+}
+
+.manage-account {
+    width: 100%;
+    padding: 15px;
+    margin: 5px 0;
+    background-color: #4285f4;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.account-img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.sign-out {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #f5f5f5;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}

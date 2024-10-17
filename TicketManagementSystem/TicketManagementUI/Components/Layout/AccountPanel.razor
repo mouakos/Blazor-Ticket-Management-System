@@ -1,0 +1,66 @@
+﻿
+@using Infrastructure.Common
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+
+@inject NavigationManager Nav
+@inject ProtectedSessionStorage ProtectedSessionStore
+
+@rendermode InteractiveServer
+
+<img @onclick="ProfileToggle" src="@m_AvatarSource" class="profile-img-btn" alt="Profile-img">
+
+
+<MudOverlay @bind-Visible="m_ShowPopUp" LightBackground AutoClose="true" />
+
+<div hidden="@(!m_ShowPopUp)" class="account-popup">
+    <div class="header">
+        <img src="@m_AvatarSource" alt="Profile Picture" class="profile-img">
+        <div class="user-info">
+            <h2>Hello!</h2>
+            <p>@m_Email</p>
+        </div>
+    </div>
+    <button @onclick="@(() => NavigateTo("/avatar"))" class="manage-account">Change Avatar</button>
+    <button @onclick="@(() => NavigateTo("/changepassword"))" class="manage-account">Change Password</button>
+    <button @onclick="@(() => NavigateTo("/logout"))" class="sign-out">Sign out</button>
+</div>
+
+@code {
+    private bool m_ShowPopUp;
+    private string? m_Email;
+
+    readonly string m_AvatarPath = "uploads/avatars/";
+    string? m_AvatarSource;
+    string? m_AvatarFileName;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var avatar = await ProtectedSessionStore.GetAsync<string>("avatar");
+            m_AvatarFileName = avatar is { Success: true, Value: not null } ? avatar.Value : Constants.c_DefaultAvatar;
+
+            m_AvatarSource = Path.Combine(m_AvatarPath, m_AvatarFileName);
+
+            var email = await ProtectedSessionStore.GetAsync<string>("email");
+            if (email.Success)
+            {
+                m_Email = email.Value;
+            }
+
+            StateHasChanged();
+        }
+    }
+
+    private void ProfileToggle()
+    {
+        m_ShowPopUp = !m_ShowPopUp;
+        StateHasChanged();
+    }
+
+    private void NavigateTo(string page)
+    {
+        ProfileToggle();
+        Nav.NavigateTo(page, true);
+    }
+}

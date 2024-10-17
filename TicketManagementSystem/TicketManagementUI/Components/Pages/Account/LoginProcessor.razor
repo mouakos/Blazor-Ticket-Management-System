@@ -20,8 +20,13 @@ Sign In ...
     {
         var loginDto = Encryption.Decode(Payload);
 
-        await SignInManager.PasswordSignInAsync(loginDto.UserName, loginDto.Password, loginDto.RememberMe, false);
-        NavigationManager.NavigateTo("/");
+        var user = await SignInManager.UserManager.FindByEmailAsync(loginDto.UserName);
+        var result = await SignInManager.PasswordSignInAsync(loginDto.UserName, loginDto.Password, loginDto.RememberMe, false);
+
+        if (result.Succeeded)
+        {
+            NavigationManager.NavigateTo(user.AccountConfirmed ? "/" : "/changepassword");
+        }
     }
 
 }

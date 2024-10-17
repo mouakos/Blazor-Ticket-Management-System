@@ -35,8 +35,8 @@
         </div>
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="() => MudDialog.Cancel()">Cancel</MudButton>
-        <MudButton Color="Color.Success" OnClick="RegisterUserAsync">Register New User</MudButton>
+        <MudButton OnClick="@(() => MudDialog.Cancel())">Cancel</MudButton>
+        <MudButton Color="Color.Success" OnClick="@(() => RegisterUserAsync())">Register New User</MudButton>
     </DialogActions>
 </MudDialog>
 

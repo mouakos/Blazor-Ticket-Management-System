@@ -1,0 +1,91 @@
+﻿@page "/avatar"
+@attribute [Authorize]
+@using Infrastructure.Common
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+
+@inject IAccountService AccountService
+@inject ProtectedSessionStorage ProtectedSessionStore
+
+@rendermode InteractiveServer
+
+<SectionContent SectionName="page-title">User Profile</SectionContent>
+
+<MudGrid Class="mt-5" Justify="Justify.Center" AlignItems="AlignItems.Center">
+    <MudCard Width="500px">
+        <MudCardContent>
+            <MudGrid>
+                <MudItem sm="3">
+                    <MudImage Src="@m_AvatarSource" Width="100" Height="100" Style="border-radius:5px;" />
+                </MudItem>
+                <MudItem sm="6" Class="content-center">
+                    <MudFileUpload T="IBrowserFile" Accept=".jpg, .jpeg, .png" FilesChanged="UploadFiles">
+                        <ActivatorContent>
+                            <MudButton Variant="Variant.Filled"
+                                       Color="Color.Primary"
+                                       StartIcon="@Icons.Material.Filled.CloudUpload">
+                                Change Avatar
+                            </MudButton>
+                        </ActivatorContent>
+                    </MudFileUpload>
+                    <MudIconButton Class="ms-2" Icon="@Icons.Material.Filled.Delete" OnClick="@(() => ResetAvatar())" Variant="Variant.Filled" Color="Color.Error" Size="Size.Medium" />
+                </MudItem>
+                <MudItem>
+                </MudItem>
+            </MudGrid>
+
+            <MudTextField Class="my-5" T="string" ReadOnly="true" Label="Email" @ref="m_MudEmail" />
+        </MudCardContent>
+    </MudCard>
+</MudGrid>
+
+@code {
+    private MudTextField<string>? m_MudEmail;
+    private string? m_Email;
+
+    private const string c_AvatarPath = "uploads/avatars/";
+    string? m_AvatarSource;
+    string? m_AvatarFileName;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var user = await AccountService.GetCurrentUserAsync();
+            if (user.IsSuccess)
+            {
+                m_Email = user.Value?.Email;
+
+                m_AvatarFileName = string.IsNullOrEmpty(user.Value?.Avatar) ? Constants.c_DefaultAvatar : user.Value.Avatar;
+            }
+            else
+            {
+                m_AvatarFileName = Constants.c_DefaultAvatar;
+            }
+
+            m_AvatarSource = Path.Combine(c_AvatarPath, m_AvatarFileName);
+            if (m_Email != null) m_MudEmail?.SetText(m_Email);
+            StateHasChanged();
+        }
+    }
+
+    private async void UploadFiles(IBrowserFile? file)
+    {
+        var uploadResult = await AccountService.UploadAvatarAsync(file);
+        if (!uploadResult.IsSuccess) return;
+        m_AvatarSource = Path.Combine(c_AvatarPath, uploadResult.Value);
+        await ProtectedSessionStore.SetAsync("avatar", uploadResult.Value);
+        StateHasChanged();
+    }
+
+    public async Task ResetAvatar()
+    {
+        var uploadResult = await AccountService.ResetAvatarAsync();
+        if (uploadResult.IsSuccess)
+        {
+            m_AvatarSource = Path.Combine(c_AvatarPath, Constants.c_DefaultAvatar);
+            await ProtectedSessionStore.SetAsync("avatar", Constants.c_DefaultAvatar);
+            StateHasChanged();
+        }
+    }
+}
