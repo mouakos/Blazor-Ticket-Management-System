@@ -1,0 +1,36 @@
+﻿.dashboard-status {
+    border: 1px solid #eaeaea;
+    text-decoration: none;
+    color: var(--black);
+    border-radius: 5px;
+}
+
+.dashboard-status .header {
+    padding: 12px;
+    border-bottom: 1px solid #eaeaea;
+}
+
+.dashboard-status .body {
+    padding: 12px;
+}
+
+.summary {
+    border: 1px solid #eaeaea;
+    padding: 20px;
+    text-decoration: none;
+    color: var(--black);
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.summary .counter {
+    font-size: 1.5rem;
+    font-weight: 400;
+}
+
+.summary:hover {
+    color: var(--dark-green);
+    border: 1px solid var(--dark-green);
+    transition: border-color 0.5s ease;
+    transition: color 0.5s ease;
+}

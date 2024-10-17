@@ -193,5 +193,23 @@ public class TicketService(
         return baseResponse;
     }
 
+    /// <inheritdoc />
+    public List<ChartResponse> Last12MonthTickets()
+    {
+        return unitOfWork.TicketRepository.Last12MonthTickets();
+    }
+
+    /// <inheritdoc />
+    public List<ChartResponse> ChartByCategory(string category)
+    {
+        return unitOfWork.TicketRepository.ChartByCategory(category);
+    }
+
+    /// <inheritdoc />
+    public List<ChartResponse> GetSummary()
+    {
+        return unitOfWork.TicketRepository.GetSummary();
+    }
+
     #endregion
 }

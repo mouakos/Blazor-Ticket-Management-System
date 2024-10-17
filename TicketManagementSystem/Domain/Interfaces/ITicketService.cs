@@ -12,5 +12,9 @@ public interface ITicketService
     List<TicketResponse> GetTickets(TicketRequest? request = null);
     Task<BaseResponse> UpdateTicketAsync(UpdateTicketRequest request);
 
+    List<ChartResponse> Last12MonthTickets();
+    List<ChartResponse> ChartByCategory(string category);
+    List<ChartResponse> GetSummary();
+
     #endregion
 }

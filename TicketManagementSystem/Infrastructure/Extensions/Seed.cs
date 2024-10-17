@@ -78,8 +78,8 @@ public static class Seed
             ExpectedDays = 1
         });
 
-        var date = DateTime.Now;
-
+        var date = new DateOnly(2024, 10, 17);
+        var startDate = new DateOnly(2024, 1, 1);
         var ticketId = 1;
         var testTickets = new Faker<Ticket>()
             .RuleFor(t => t.Id, _ => ticketId++)
@@ -90,9 +90,10 @@ public static class Seed
             .RuleFor(t => t.Status,
                 f => f.PickRandom(Constants.c_StatusNew, Constants.c_StatusOpen, Constants.c_StatusClosed))
             .RuleFor(t => t.Summary, _ => $"Sample ticket {ticketId}")
-            .RuleFor(t => t.RaisedDate, f => date.AddDays(f.PickRandom(-1, 0)))
+            .RuleFor(t => t.RaisedDate,
+                f => f.Date.BetweenDateOnly(startDate, date).ToDateTime(TimeOnly.FromDateTime(DateTime.Now)))
             .RuleFor(t => t.ClosedBy, (_, t) => t.Status == Constants.c_StatusClosed ? userId : null)
-            .RuleFor(t => t.ExpectedDate, f => date.AddDays(f.PickRandom(1, 7, 14)))
+            .RuleFor(t => t.ExpectedDate, (f, t) => t.RaisedDate.AddDays(f.PickRandom(1, 7, 14)))
             .RuleFor(t => t.ClosedDate, (_, t) => t.Status == Constants.c_StatusClosed ? t.ExpectedDate : null)
             .RuleFor(t => t.Description, _ => $"Description for ticket {ticketId}");
 

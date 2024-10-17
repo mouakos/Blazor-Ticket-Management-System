@@ -1,8 +1,9 @@
 ﻿@page "/ticket"
 @using Domain.DTOs.Requests
+@using Microsoft.AspNetCore.Authorization
 <SectionContent SectionName="page-title">Ticket Management</SectionContent>
 
-
+@attribute [Authorize]
 @rendermode InteractiveServer
 @inject ITicketService TicketService
 @inject ICriteriaService CriteriaService
@@ -76,6 +77,9 @@
 
 @code {
 
+    [SupplyParameterFromQuery]
+    public string? FilterStatus { get; set; }
+
     MudDataGrid<TicketResponse> m_DataGrid;
     MultiSelect m_ProductDdl;
     MultiSelect m_PriorityDdl;
@@ -120,6 +124,13 @@
 
     private async Task<GridData<TicketResponse>> ServerReload(GridState<TicketResponse> state)
     {
+        if (FilterStatus != null)
+        {
+            m_StatusDdl.Options = new[] { FilterStatus };
+            FilterStatus = null;
+            StateHasChanged();
+        }
+
         IEnumerable<TicketResponse> getTickets = TicketService.GetTickets(new TicketRequest
         {
             Summary = Summary,
