@@ -4,7 +4,7 @@
 @using Microsoft.AspNetCore.Authorization
 @using TicketManagementUI.Extensions.Helpers
 @attribute [Authorize]
-
+@rendermode InteractiveServer
 <SectionContent SectionName="page-title">Ticket Details</SectionContent>
 
 @inject ITicketService TicketService
