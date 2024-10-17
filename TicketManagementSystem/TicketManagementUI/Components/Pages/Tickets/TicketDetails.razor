@@ -12,15 +12,27 @@
 @inject IAccountService AccountService
 @inject ICriteriaService CriteriaService
 @inject IDiscussionService DiscussionService
+@inject ISnackbar Snackbar
 @inject NavigationManager Nav
 
 <div class="head-panel">
     <MudButton StartIcon="@Icons.Material.Filled.ArrowBack" @onclick="BackToTicketList" Variant="Variant.Filled" Color="Color.Primary">
         <MudText>Back to list</MudText>
     </MudButton>
-    <MudButton Disabled="m_IsClosed" StartIcon="@Icons.Material.Filled.CheckCircle" @onclick="CloseTicket" Variant="Variant.Filled" Color="Color.Error">
+    <MudButton Disabled="m_IsClosed" StartIcon="@Icons.Material.Filled.CheckCircle" @onclick="CloseTicketAsync" Variant="Variant.Filled" Color="Color.Error">
         <MudText>Close</MudText>
     </MudButton>
+    <MudButton StartIcon="@Icons.Material.Filled.CheckCircle" @onclick="DeleteTicketAsync" Variant="Variant.Filled" Color="Color.Error">
+        <MudText>Delete</MudText>
+    </MudButton>
+    <MudMessageBox @ref="m_MudMessageBox" Title="Warning" CancelText="Cancel">
+        <MessageContent>
+            Deleting can <b><i>not</i></b> be undone!
+        </MessageContent>
+        <YesButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.DeleteForever">Delete</MudButton>
+        </YesButton>
+    </MudMessageBox>
 </div>
 
 <SectionContent SectionName="page-title">Ticket ID: @m_Ticket.TicketIdView</SectionContent>
@@ -106,7 +118,7 @@
                            FullWidth="true"
                            EndIcon="@Icons.Material.Filled.Save"
                            Color="Color.Primary"
-                           @onclick="Update">
+                           @onclick="UpdateAsync">
                     Update Ticket
                 </MudButton>
                 <MudTextField T="string" ReadOnly="true" Text="@m_Ticket.ExpectedDate.BeautifyDate()" Label="Expected Completion Date" Variant="Variant.Outlined"></MudTextField>
@@ -147,6 +159,7 @@
     private Alert m_Alert;
     private string?[] m_Errors = [];
     private List<DiscussionResponse>? m_Discussions;
+    private MudMessageBox? m_MudMessageBox;
 
     protected override async Task OnInitializedAsync()
     {
@@ -212,13 +225,13 @@
         Nav.NavigateTo("/ticket");
     }
 
-    private async Task CloseTicket()
+    private async Task CloseTicketAsync()
     {
         m_StatusDdl.SelectedValue = Constants.c_StatusClosed;
-        await Update();
+        await UpdateAsync();
     }
 
-    private async Task Update()
+    private async Task UpdateAsync()
     {
         var request = new UpdateTicketRequest
         {
@@ -240,13 +253,12 @@
             if (result.IsSuccess)
             {
                 m_Alert.ShowSuccess("Successfully update the ticket!");
-
                 m_Ticket = await TicketService.FindTicketAsync(ticketId);
                 AssignTicketValue();
             }
             else
             {
-                m_Alert.ShowFailed("Failed: " + result.ErrorMessage);
+                m_Alert.ShowFailed(result.ErrorMessage);
             }
         }
     }
@@ -254,6 +266,25 @@
     private async Task RefreshDiscussionAsync()
     {
         m_Discussions = await DiscussionService.GetDiscussionsAsync(ticketId);
+        StateHasChanged();
+    }
+
+    private async Task DeleteTicketAsync()
+    {
+        var result = await m_MudMessageBox.ShowAsync();
+        if (result is true)
+        {
+            var response = await TicketService.DeleteTicketAsync(ticketId);
+            if (response.IsSuccess)
+            {
+                Snackbar.Add("Delete ticket Success!", Severity.Success);
+                BackToTicketList();
+            }
+            else
+            {
+                Snackbar.Add(response.ErrorMessage, Severity.Error);
+            }
+        }
         StateHasChanged();
     }
 

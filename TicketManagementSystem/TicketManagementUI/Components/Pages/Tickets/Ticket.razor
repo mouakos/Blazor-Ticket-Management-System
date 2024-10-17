@@ -127,7 +127,7 @@
             StateHasChanged();
         }
 
-        IEnumerable<TicketResponse> getTickets = await TicketService.GetTickets(new TicketRequest
+        IEnumerable<TicketResponse> getTickets = await TicketService.GetTicketsAsync(new TicketRequest
         {
             Summary = Summary,
             ProductId = m_ProductDdl.Options.Select(int.Parse).ToArray(),

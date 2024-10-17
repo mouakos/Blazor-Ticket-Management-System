@@ -12,9 +12,9 @@ public interface ITicketService
     Task<BaseResponse<int>> CreateTicketAsync(CreateTicketRequest request);
     Task<TicketResponse?> FindTicketAsync(int ticketId);
     Task<List<ChartResponse>> GetSummaryAsync();
-    Task<List<TicketResponse>> GetTickets(TicketRequest? request = null);
-
-    Task<List<ChartResponse>> Last12MonthTickets();
+    Task<List<TicketResponse>> GetTicketsAsync(TicketRequest? request = null);
+    Task<BaseResponse> DeleteTicketAsync(int ticketId);
+    Task<List<ChartResponse>> GetLast12MonthTicketsAsync();
     Task<BaseResponse> UpdateTicketAsync(UpdateTicketRequest request);
 
     #endregion

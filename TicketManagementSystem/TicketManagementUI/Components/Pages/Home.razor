@@ -102,7 +102,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        m_Last12MonthTickets = await TicketService.Last12MonthTickets();
+        m_Last12MonthTickets = await TicketService.GetLast12MonthTicketsAsync();
 
         m_Last12MonthSeries.Add(new ChartSeries
         {

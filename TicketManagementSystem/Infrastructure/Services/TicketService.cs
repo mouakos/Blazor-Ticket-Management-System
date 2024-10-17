@@ -143,7 +143,7 @@ public class TicketService(
     }
 
     /// <inheritdoc />
-    public async Task<List<TicketResponse>> GetTickets(TicketRequest? request = null)
+    public async Task<List<TicketResponse>> GetTicketsAsync(TicketRequest? request = null)
     {
         var tickets = await unitOfWork.TicketRepository.GetTicketsAsync(request);
         return tickets.Select(x => new TicketResponse
@@ -162,7 +162,41 @@ public class TicketService(
     }
 
     /// <inheritdoc />
-    public async Task<List<ChartResponse>> Last12MonthTickets()
+    public async Task<BaseResponse> DeleteTicketAsync(int ticketId)
+    {
+        var response = new BaseResponse
+        {
+            IsSuccess = false
+        };
+        var ticket = await unitOfWork.TicketRepository.FindTicketAsync(ticketId);
+        if (ticket == null)
+        {
+            response.ErrorMessage = "Ticket not found";
+            return response;
+        }
+
+        try
+        {
+            unitOfWork.TicketRepository.Delete(ticket);
+            if (await unitOfWork.SaveChangesAsync())
+            {
+                response.IsSuccess = true;
+            }
+            else
+            {
+                response.ErrorMessage = "Failed when delete ticket!";
+            }
+        }
+        catch (Exception e)
+        {
+            response.ErrorMessage = $"Failed: {e.Message}";
+        }
+
+        return response;
+    }
+
+    /// <inheritdoc />
+    public async Task<List<ChartResponse>> GetLast12MonthTicketsAsync()
     {
         return await unitOfWork.TicketRepository.GetLast12MonthTicketsAsync();
     }

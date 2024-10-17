@@ -3,19 +3,16 @@ using System;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Infrastructure.Data.migration
+namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241016125316_UpdateTicket")]
-    partial class UpdateTicket
+    partial class AppDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
@@ -29,19 +26,19 @@ namespace Infrastructure.Data.migration
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("DiscussionId")
+                    b.Property<int?>("DiscussionId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("FileName")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("FileSize")
+                    b.Property<long>("FileSize")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("ServerFileName")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("TicketId")
+                    b.Property<int?>("TicketId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -244,37 +241,39 @@ namespace Infrastructure.Data.migration
                             Id = 1,
                             CategoryId = 2,
                             Description = "Description for ticket 2",
-                            ExpectedDate = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ExpectedDate = new DateTime(2024, 2, 17, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(5147),
                             PriorityId = 2,
-                            ProductId = 1,
+                            ProductId = 3,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "CLOSED",
+                            RaisedDate = new DateTime(2024, 2, 3, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(5147),
+                            Status = "OPEN",
                             Summary = "Sample ticket 2"
                         },
                         new
                         {
                             Id = 2,
-                            CategoryId = 1,
+                            CategoryId = 3,
+                            ClosedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
+                            ClosedDate = new DateTime(2024, 10, 12, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7092),
                             Description = "Description for ticket 3",
-                            ExpectedDate = new DateTime(2024, 9, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PriorityId = 2,
-                            ProductId = 1,
+                            ExpectedDate = new DateTime(2024, 10, 12, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7092),
+                            PriorityId = 1,
+                            ProductId = 2,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "NEW",
+                            RaisedDate = new DateTime(2024, 10, 11, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7092),
+                            Status = "CLOSED",
                             Summary = "Sample ticket 3"
                         },
                         new
                         {
                             Id = 3,
-                            CategoryId = 1,
+                            CategoryId = 3,
                             Description = "Description for ticket 4",
-                            ExpectedDate = new DateTime(2024, 9, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PriorityId = 3,
+                            ExpectedDate = new DateTime(2024, 7, 25, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7138),
+                            PriorityId = 1,
                             ProductId = 3,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RaisedDate = new DateTime(2024, 7, 18, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7138),
                             Status = "OPEN",
                             Summary = "Sample ticket 4"
                         },
@@ -283,11 +282,11 @@ namespace Infrastructure.Data.migration
                             Id = 4,
                             CategoryId = 1,
                             Description = "Description for ticket 5",
-                            ExpectedDate = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PriorityId = 1,
+                            ExpectedDate = new DateTime(2024, 8, 27, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7154),
+                            PriorityId = 3,
                             ProductId = 1,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RaisedDate = new DateTime(2024, 8, 26, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7154),
                             Status = "OPEN",
                             Summary = "Sample ticket 5"
                         },
@@ -296,51 +295,57 @@ namespace Infrastructure.Data.migration
                             Id = 5,
                             CategoryId = 2,
                             Description = "Description for ticket 6",
-                            ExpectedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ExpectedDate = new DateTime(2024, 4, 25, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7167),
                             PriorityId = 3,
-                            ProductId = 2,
+                            ProductId = 3,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "OPEN",
+                            RaisedDate = new DateTime(2024, 4, 24, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7167),
+                            Status = "NEW",
                             Summary = "Sample ticket 6"
                         },
                         new
                         {
                             Id = 6,
-                            CategoryId = 2,
+                            CategoryId = 1,
+                            ClosedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
+                            ClosedDate = new DateTime(2024, 10, 1, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7180),
                             Description = "Description for ticket 7",
-                            ExpectedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PriorityId = 3,
-                            ProductId = 3,
+                            ExpectedDate = new DateTime(2024, 10, 1, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7180),
+                            PriorityId = 2,
+                            ProductId = 2,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RaisedDate = new DateTime(2024, 9, 17, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7180),
                             Status = "CLOSED",
                             Summary = "Sample ticket 7"
                         },
                         new
                         {
                             Id = 7,
-                            CategoryId = 1,
+                            CategoryId = 2,
+                            ClosedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
+                            ClosedDate = new DateTime(2024, 8, 10, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7224),
                             Description = "Description for ticket 8",
-                            ExpectedDate = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PriorityId = 2,
+                            ExpectedDate = new DateTime(2024, 8, 10, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7224),
+                            PriorityId = 3,
                             ProductId = 3,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "NEW",
+                            RaisedDate = new DateTime(2024, 8, 9, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7224),
+                            Status = "CLOSED",
                             Summary = "Sample ticket 8"
                         },
                         new
                         {
                             Id = 8,
-                            CategoryId = 2,
+                            CategoryId = 1,
+                            ClosedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
+                            ClosedDate = new DateTime(2024, 10, 14, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7238),
                             Description = "Description for ticket 9",
-                            ExpectedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PriorityId = 1,
+                            ExpectedDate = new DateTime(2024, 10, 14, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7238),
+                            PriorityId = 3,
                             ProductId = 2,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "NEW",
+                            RaisedDate = new DateTime(2024, 9, 30, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7238),
+                            Status = "CLOSED",
                             Summary = "Sample ticket 9"
                         },
                         new
@@ -348,207 +353,219 @@ namespace Infrastructure.Data.migration
                             Id = 9,
                             CategoryId = 2,
                             Description = "Description for ticket 10",
-                            ExpectedDate = new DateTime(2024, 9, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PriorityId = 3,
-                            ProductId = 1,
+                            ExpectedDate = new DateTime(2024, 1, 26, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7252),
+                            PriorityId = 1,
+                            ProductId = 2,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "CLOSED",
+                            RaisedDate = new DateTime(2024, 1, 12, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7252),
+                            Status = "OPEN",
                             Summary = "Sample ticket 10"
                         },
                         new
                         {
                             Id = 10,
-                            CategoryId = 1,
+                            CategoryId = 2,
                             Description = "Description for ticket 11",
-                            ExpectedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PriorityId = 1,
-                            ProductId = 2,
+                            ExpectedDate = new DateTime(2024, 1, 18, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7265),
+                            PriorityId = 2,
+                            ProductId = 1,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RaisedDate = new DateTime(2024, 1, 11, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7265),
                             Status = "OPEN",
                             Summary = "Sample ticket 11"
                         },
                         new
                         {
                             Id = 11,
-                            CategoryId = 1,
+                            CategoryId = 3,
+                            ClosedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
+                            ClosedDate = new DateTime(2024, 6, 23, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7277),
                             Description = "Description for ticket 12",
-                            ExpectedDate = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ExpectedDate = new DateTime(2024, 6, 23, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7277),
                             PriorityId = 1,
                             ProductId = 2,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "OPEN",
+                            RaisedDate = new DateTime(2024, 6, 9, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7277),
+                            Status = "CLOSED",
                             Summary = "Sample ticket 12"
                         },
                         new
                         {
                             Id = 12,
-                            CategoryId = 2,
+                            CategoryId = 1,
                             Description = "Description for ticket 13",
-                            ExpectedDate = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PriorityId = 1,
-                            ProductId = 1,
+                            ExpectedDate = new DateTime(2024, 1, 22, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7290),
+                            PriorityId = 3,
+                            ProductId = 2,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "OPEN",
+                            RaisedDate = new DateTime(2024, 1, 8, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7290),
+                            Status = "NEW",
                             Summary = "Sample ticket 13"
                         },
                         new
                         {
                             Id = 13,
-                            CategoryId = 1,
+                            CategoryId = 2,
                             Description = "Description for ticket 14",
-                            ExpectedDate = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ExpectedDate = new DateTime(2024, 6, 13, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7303),
                             PriorityId = 2,
-                            ProductId = 3,
+                            ProductId = 2,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RaisedDate = new DateTime(2024, 6, 6, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7303),
                             Status = "NEW",
                             Summary = "Sample ticket 14"
                         },
                         new
                         {
                             Id = 14,
-                            CategoryId = 2,
+                            CategoryId = 1,
+                            ClosedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
+                            ClosedDate = new DateTime(2024, 6, 5, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7314),
                             Description = "Description for ticket 15",
-                            ExpectedDate = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ExpectedDate = new DateTime(2024, 6, 5, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7314),
                             PriorityId = 1,
                             ProductId = 3,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "OPEN",
+                            RaisedDate = new DateTime(2024, 5, 29, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7314),
+                            Status = "CLOSED",
                             Summary = "Sample ticket 15"
                         },
                         new
                         {
                             Id = 15,
-                            CategoryId = 1,
+                            CategoryId = 2,
                             Description = "Description for ticket 16",
-                            ExpectedDate = new DateTime(2024, 9, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PriorityId = 2,
-                            ProductId = 3,
+                            ExpectedDate = new DateTime(2024, 5, 2, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7327),
+                            PriorityId = 1,
+                            ProductId = 1,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RaisedDate = new DateTime(2024, 4, 25, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7327),
                             Status = "NEW",
                             Summary = "Sample ticket 16"
                         },
                         new
                         {
                             Id = 16,
-                            CategoryId = 1,
+                            CategoryId = 3,
                             Description = "Description for ticket 17",
-                            ExpectedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PriorityId = 3,
-                            ProductId = 3,
+                            ExpectedDate = new DateTime(2024, 5, 15, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7370),
+                            PriorityId = 2,
+                            ProductId = 1,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "CLOSED",
+                            RaisedDate = new DateTime(2024, 5, 14, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7370),
+                            Status = "OPEN",
                             Summary = "Sample ticket 17"
                         },
                         new
                         {
                             Id = 17,
-                            CategoryId = 2,
+                            CategoryId = 3,
+                            ClosedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
+                            ClosedDate = new DateTime(2024, 4, 1, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7383),
                             Description = "Description for ticket 18",
-                            ExpectedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PriorityId = 3,
-                            ProductId = 2,
+                            ExpectedDate = new DateTime(2024, 4, 1, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7383),
+                            PriorityId = 1,
+                            ProductId = 3,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "NEW",
+                            RaisedDate = new DateTime(2024, 3, 25, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7383),
+                            Status = "CLOSED",
                             Summary = "Sample ticket 18"
                         },
                         new
                         {
                             Id = 18,
-                            CategoryId = 1,
+                            CategoryId = 3,
                             Description = "Description for ticket 19",
-                            ExpectedDate = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ExpectedDate = new DateTime(2024, 4, 1, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7396),
                             PriorityId = 1,
                             ProductId = 3,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "CLOSED",
+                            RaisedDate = new DateTime(2024, 3, 31, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7396),
+                            Status = "NEW",
                             Summary = "Sample ticket 19"
                         },
                         new
                         {
                             Id = 19,
-                            CategoryId = 3,
+                            CategoryId = 2,
                             Description = "Description for ticket 20",
-                            ExpectedDate = new DateTime(2024, 9, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PriorityId = 2,
+                            ExpectedDate = new DateTime(2024, 5, 25, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7408),
+                            PriorityId = 3,
                             ProductId = 1,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "CLOSED",
+                            RaisedDate = new DateTime(2024, 5, 24, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7408),
+                            Status = "OPEN",
                             Summary = "Sample ticket 20"
                         },
                         new
                         {
                             Id = 20,
-                            CategoryId = 2,
+                            CategoryId = 1,
                             Description = "Description for ticket 21",
-                            ExpectedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PriorityId = 1,
-                            ProductId = 2,
+                            ExpectedDate = new DateTime(2024, 5, 28, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7421),
+                            PriorityId = 3,
+                            ProductId = 1,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "OPEN",
+                            RaisedDate = new DateTime(2024, 5, 27, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7421),
+                            Status = "NEW",
                             Summary = "Sample ticket 21"
                         },
                         new
                         {
                             Id = 21,
                             CategoryId = 1,
+                            ClosedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
+                            ClosedDate = new DateTime(2024, 3, 23, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7433),
                             Description = "Description for ticket 22",
-                            ExpectedDate = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ExpectedDate = new DateTime(2024, 3, 23, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7433),
                             PriorityId = 3,
                             ProductId = 1,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "NEW",
+                            RaisedDate = new DateTime(2024, 3, 16, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7433),
+                            Status = "CLOSED",
                             Summary = "Sample ticket 22"
                         },
                         new
                         {
                             Id = 22,
-                            CategoryId = 1,
+                            CategoryId = 2,
+                            ClosedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
+                            ClosedDate = new DateTime(2024, 7, 1, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7446),
                             Description = "Description for ticket 23",
-                            ExpectedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PriorityId = 2,
+                            ExpectedDate = new DateTime(2024, 7, 1, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7446),
+                            PriorityId = 1,
                             ProductId = 3,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "NEW",
+                            RaisedDate = new DateTime(2024, 6, 17, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7446),
+                            Status = "CLOSED",
                             Summary = "Sample ticket 23"
                         },
                         new
                         {
                             Id = 23,
-                            CategoryId = 1,
+                            CategoryId = 3,
+                            ClosedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
+                            ClosedDate = new DateTime(2024, 1, 23, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7459),
                             Description = "Description for ticket 24",
-                            ExpectedDate = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PriorityId = 2,
-                            ProductId = 3,
+                            ExpectedDate = new DateTime(2024, 1, 23, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7459),
+                            PriorityId = 1,
+                            ProductId = 1,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "NEW",
+                            RaisedDate = new DateTime(2024, 1, 9, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7459),
+                            Status = "CLOSED",
                             Summary = "Sample ticket 24"
                         },
                         new
                         {
                             Id = 24,
-                            CategoryId = 2,
+                            CategoryId = 3,
                             Description = "Description for ticket 25",
-                            ExpectedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PriorityId = 3,
+                            ExpectedDate = new DateTime(2024, 9, 22, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7472),
+                            PriorityId = 2,
                             ProductId = 1,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "OPEN",
+                            RaisedDate = new DateTime(2024, 9, 15, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7472),
+                            Status = "NEW",
                             Summary = "Sample ticket 25"
                         },
                         new
@@ -556,12 +573,12 @@ namespace Infrastructure.Data.migration
                             Id = 25,
                             CategoryId = 2,
                             Description = "Description for ticket 26",
-                            ExpectedDate = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PriorityId = 3,
-                            ProductId = 2,
+                            ExpectedDate = new DateTime(2024, 5, 9, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7513),
+                            PriorityId = 1,
+                            ProductId = 3,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "OPEN",
+                            RaisedDate = new DateTime(2024, 5, 8, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7513),
+                            Status = "NEW",
                             Summary = "Sample ticket 26"
                         },
                         new
@@ -569,12 +586,12 @@ namespace Infrastructure.Data.migration
                             Id = 26,
                             CategoryId = 3,
                             Description = "Description for ticket 27",
-                            ExpectedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ExpectedDate = new DateTime(2024, 5, 24, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7530),
                             PriorityId = 3,
-                            ProductId = 2,
+                            ProductId = 1,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "OPEN",
+                            RaisedDate = new DateTime(2024, 5, 17, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7530),
+                            Status = "NEW",
                             Summary = "Sample ticket 27"
                         },
                         new
@@ -582,11 +599,11 @@ namespace Infrastructure.Data.migration
                             Id = 27,
                             CategoryId = 3,
                             Description = "Description for ticket 28",
-                            ExpectedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PriorityId = 3,
+                            ExpectedDate = new DateTime(2024, 2, 28, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7542),
+                            PriorityId = 2,
                             ProductId = 1,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RaisedDate = new DateTime(2024, 2, 14, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7542),
                             Status = "OPEN",
                             Summary = "Sample ticket 28"
                         },
@@ -594,221 +611,235 @@ namespace Infrastructure.Data.migration
                         {
                             Id = 28,
                             CategoryId = 2,
+                            ClosedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
+                            ClosedDate = new DateTime(2024, 9, 7, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7554),
                             Description = "Description for ticket 29",
-                            ExpectedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PriorityId = 1,
-                            ProductId = 1,
+                            ExpectedDate = new DateTime(2024, 9, 7, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7554),
+                            PriorityId = 2,
+                            ProductId = 3,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RaisedDate = new DateTime(2024, 9, 6, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7554),
                             Status = "CLOSED",
                             Summary = "Sample ticket 29"
                         },
                         new
                         {
                             Id = 29,
-                            CategoryId = 1,
+                            CategoryId = 2,
                             Description = "Description for ticket 30",
-                            ExpectedDate = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PriorityId = 3,
-                            ProductId = 3,
+                            ExpectedDate = new DateTime(2024, 5, 16, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7567),
+                            PriorityId = 1,
+                            ProductId = 1,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "NEW",
+                            RaisedDate = new DateTime(2024, 5, 2, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7567),
+                            Status = "OPEN",
                             Summary = "Sample ticket 30"
                         },
                         new
                         {
                             Id = 30,
                             CategoryId = 2,
+                            ClosedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
+                            ClosedDate = new DateTime(2024, 3, 5, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7580),
                             Description = "Description for ticket 31",
-                            ExpectedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PriorityId = 3,
+                            ExpectedDate = new DateTime(2024, 3, 5, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7580),
+                            PriorityId = 2,
                             ProductId = 3,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "NEW",
+                            RaisedDate = new DateTime(2024, 2, 20, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7580),
+                            Status = "CLOSED",
                             Summary = "Sample ticket 31"
                         },
                         new
                         {
                             Id = 31,
-                            CategoryId = 2,
+                            CategoryId = 1,
+                            ClosedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
+                            ClosedDate = new DateTime(2024, 2, 11, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7593),
                             Description = "Description for ticket 32",
-                            ExpectedDate = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ExpectedDate = new DateTime(2024, 2, 11, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7593),
                             PriorityId = 3,
-                            ProductId = 2,
+                            ProductId = 1,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "OPEN",
+                            RaisedDate = new DateTime(2024, 2, 10, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7593),
+                            Status = "CLOSED",
                             Summary = "Sample ticket 32"
                         },
                         new
                         {
                             Id = 32,
-                            CategoryId = 3,
+                            CategoryId = 1,
                             Description = "Description for ticket 33",
-                            ExpectedDate = new DateTime(2024, 9, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PriorityId = 2,
+                            ExpectedDate = new DateTime(2024, 2, 3, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7605),
+                            PriorityId = 3,
                             ProductId = 3,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "CLOSED",
+                            RaisedDate = new DateTime(2024, 1, 27, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7605),
+                            Status = "NEW",
                             Summary = "Sample ticket 33"
                         },
                         new
                         {
                             Id = 33,
-                            CategoryId = 3,
+                            CategoryId = 1,
                             Description = "Description for ticket 34",
-                            ExpectedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ExpectedDate = new DateTime(2024, 6, 7, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7635),
                             PriorityId = 3,
                             ProductId = 3,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RaisedDate = new DateTime(2024, 6, 6, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7635),
                             Status = "NEW",
                             Summary = "Sample ticket 34"
                         },
                         new
                         {
                             Id = 34,
-                            CategoryId = 1,
+                            CategoryId = 2,
                             Description = "Description for ticket 35",
-                            ExpectedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ExpectedDate = new DateTime(2024, 4, 30, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7649),
                             PriorityId = 1,
-                            ProductId = 1,
+                            ProductId = 2,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "CLOSED",
+                            RaisedDate = new DateTime(2024, 4, 23, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7649),
+                            Status = "OPEN",
                             Summary = "Sample ticket 35"
                         },
                         new
                         {
                             Id = 35,
-                            CategoryId = 3,
+                            CategoryId = 2,
                             Description = "Description for ticket 36",
-                            ExpectedDate = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PriorityId = 2,
-                            ProductId = 1,
+                            ExpectedDate = new DateTime(2024, 4, 13, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7661),
+                            PriorityId = 1,
+                            ProductId = 3,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RaisedDate = new DateTime(2024, 3, 30, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7661),
                             Status = "OPEN",
                             Summary = "Sample ticket 36"
                         },
                         new
                         {
                             Id = 36,
-                            CategoryId = 1,
+                            CategoryId = 2,
                             Description = "Description for ticket 37",
-                            ExpectedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ExpectedDate = new DateTime(2024, 8, 12, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7673),
                             PriorityId = 3,
-                            ProductId = 2,
+                            ProductId = 3,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "OPEN",
+                            RaisedDate = new DateTime(2024, 8, 11, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7673),
+                            Status = "NEW",
                             Summary = "Sample ticket 37"
                         },
                         new
                         {
                             Id = 37,
-                            CategoryId = 3,
+                            CategoryId = 1,
                             Description = "Description for ticket 38",
-                            ExpectedDate = new DateTime(2024, 9, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PriorityId = 1,
-                            ProductId = 3,
+                            ExpectedDate = new DateTime(2024, 7, 2, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7686),
+                            PriorityId = 3,
+                            ProductId = 1,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "OPEN",
+                            RaisedDate = new DateTime(2024, 6, 25, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7686),
+                            Status = "NEW",
                             Summary = "Sample ticket 38"
                         },
                         new
                         {
                             Id = 38,
-                            CategoryId = 3,
+                            CategoryId = 2,
+                            ClosedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
+                            ClosedDate = new DateTime(2024, 4, 7, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7698),
                             Description = "Description for ticket 39",
-                            ExpectedDate = new DateTime(2024, 9, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PriorityId = 3,
-                            ProductId = 1,
+                            ExpectedDate = new DateTime(2024, 4, 7, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7698),
+                            PriorityId = 2,
+                            ProductId = 3,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "OPEN",
+                            RaisedDate = new DateTime(2024, 3, 31, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7698),
+                            Status = "CLOSED",
                             Summary = "Sample ticket 39"
                         },
                         new
                         {
                             Id = 39,
                             CategoryId = 1,
+                            ClosedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
+                            ClosedDate = new DateTime(2024, 2, 11, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7711),
                             Description = "Description for ticket 40",
-                            ExpectedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ExpectedDate = new DateTime(2024, 2, 11, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7711),
                             PriorityId = 1,
-                            ProductId = 1,
+                            ProductId = 3,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "NEW",
+                            RaisedDate = new DateTime(2024, 1, 28, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7711),
+                            Status = "CLOSED",
                             Summary = "Sample ticket 40"
                         },
                         new
                         {
                             Id = 40,
-                            CategoryId = 2,
+                            CategoryId = 3,
                             Description = "Description for ticket 41",
-                            ExpectedDate = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ExpectedDate = new DateTime(2024, 9, 9, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7723),
                             PriorityId = 1,
                             ProductId = 2,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "OPEN",
+                            RaisedDate = new DateTime(2024, 9, 8, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7723),
+                            Status = "NEW",
                             Summary = "Sample ticket 41"
                         },
                         new
                         {
                             Id = 41,
-                            CategoryId = 3,
+                            CategoryId = 2,
+                            ClosedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
+                            ClosedDate = new DateTime(2024, 4, 2, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7735),
                             Description = "Description for ticket 42",
-                            ExpectedDate = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PriorityId = 3,
-                            ProductId = 2,
+                            ExpectedDate = new DateTime(2024, 4, 2, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7735),
+                            PriorityId = 2,
+                            ProductId = 3,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "NEW",
+                            RaisedDate = new DateTime(2024, 3, 26, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7735),
+                            Status = "CLOSED",
                             Summary = "Sample ticket 42"
                         },
                         new
                         {
                             Id = 42,
-                            CategoryId = 3,
+                            CategoryId = 1,
                             Description = "Description for ticket 43",
-                            ExpectedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PriorityId = 1,
+                            ExpectedDate = new DateTime(2024, 5, 8, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7788),
+                            PriorityId = 2,
                             ProductId = 1,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "CLOSED",
+                            RaisedDate = new DateTime(2024, 5, 7, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7788),
+                            Status = "OPEN",
                             Summary = "Sample ticket 43"
                         },
                         new
                         {
                             Id = 43,
-                            CategoryId = 1,
+                            CategoryId = 2,
                             Description = "Description for ticket 44",
-                            ExpectedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PriorityId = 2,
-                            ProductId = 2,
+                            ExpectedDate = new DateTime(2024, 5, 17, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7803),
+                            PriorityId = 1,
+                            ProductId = 3,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "CLOSED",
+                            RaisedDate = new DateTime(2024, 5, 16, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7803),
+                            Status = "OPEN",
                             Summary = "Sample ticket 44"
                         },
                         new
                         {
                             Id = 44,
-                            CategoryId = 1,
+                            CategoryId = 2,
+                            ClosedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
+                            ClosedDate = new DateTime(2024, 9, 20, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7815),
                             Description = "Description for ticket 45",
-                            ExpectedDate = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PriorityId = 3,
-                            ProductId = 1,
+                            ExpectedDate = new DateTime(2024, 9, 20, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7815),
+                            PriorityId = 2,
+                            ProductId = 2,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "OPEN",
+                            RaisedDate = new DateTime(2024, 9, 6, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7815),
+                            Status = "CLOSED",
                             Summary = "Sample ticket 45"
                         },
                         new
@@ -816,12 +847,12 @@ namespace Infrastructure.Data.migration
                             Id = 45,
                             CategoryId = 2,
                             Description = "Description for ticket 46",
-                            ExpectedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PriorityId = 3,
-                            ProductId = 1,
+                            ExpectedDate = new DateTime(2024, 5, 27, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7828),
+                            PriorityId = 2,
+                            ProductId = 2,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "OPEN",
+                            RaisedDate = new DateTime(2024, 5, 20, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7828),
+                            Status = "NEW",
                             Summary = "Sample ticket 46"
                         },
                         new
@@ -829,38 +860,38 @@ namespace Infrastructure.Data.migration
                             Id = 46,
                             CategoryId = 1,
                             Description = "Description for ticket 47",
-                            ExpectedDate = new DateTime(2024, 9, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ExpectedDate = new DateTime(2024, 8, 25, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7840),
                             PriorityId = 3,
-                            ProductId = 1,
+                            ProductId = 2,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "CLOSED",
+                            RaisedDate = new DateTime(2024, 8, 18, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7840),
+                            Status = "NEW",
                             Summary = "Sample ticket 47"
                         },
                         new
                         {
                             Id = 47,
-                            CategoryId = 2,
+                            CategoryId = 1,
                             Description = "Description for ticket 48",
-                            ExpectedDate = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ExpectedDate = new DateTime(2024, 10, 17, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7852),
                             PriorityId = 2,
                             ProductId = 3,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RaisedDate = new DateTime(2024, 10, 16, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7852),
                             Status = "NEW",
                             Summary = "Sample ticket 48"
                         },
                         new
                         {
                             Id = 48,
-                            CategoryId = 1,
+                            CategoryId = 3,
                             Description = "Description for ticket 49",
-                            ExpectedDate = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PriorityId = 1,
-                            ProductId = 2,
+                            ExpectedDate = new DateTime(2024, 6, 26, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7864),
+                            PriorityId = 3,
+                            ProductId = 3,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "OPEN",
+                            RaisedDate = new DateTime(2024, 6, 12, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7864),
+                            Status = "NEW",
                             Summary = "Sample ticket 49"
                         },
                         new
@@ -868,11 +899,11 @@ namespace Infrastructure.Data.migration
                             Id = 49,
                             CategoryId = 3,
                             Description = "Description for ticket 50",
-                            ExpectedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PriorityId = 1,
-                            ProductId = 3,
+                            ExpectedDate = new DateTime(2024, 5, 12, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7876),
+                            PriorityId = 2,
+                            ProductId = 2,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RaisedDate = new DateTime(2024, 5, 11, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7876),
                             Status = "OPEN",
                             Summary = "Sample ticket 50"
                         },
@@ -880,26 +911,30 @@ namespace Infrastructure.Data.migration
                         {
                             Id = 50,
                             CategoryId = 1,
+                            ClosedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
+                            ClosedDate = new DateTime(2024, 4, 18, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7888),
                             Description = "Description for ticket 51",
-                            ExpectedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PriorityId = 1,
+                            ExpectedDate = new DateTime(2024, 4, 18, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7888),
+                            PriorityId = 3,
                             ProductId = 2,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "NEW",
+                            RaisedDate = new DateTime(2024, 4, 4, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7888),
+                            Status = "CLOSED",
                             Summary = "Sample ticket 51"
                         },
                         new
                         {
                             Id = 51,
-                            CategoryId = 1,
+                            CategoryId = 3,
+                            ClosedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
+                            ClosedDate = new DateTime(2024, 3, 30, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7939),
                             Description = "Description for ticket 52",
-                            ExpectedDate = new DateTime(2024, 9, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PriorityId = 1,
-                            ProductId = 3,
+                            ExpectedDate = new DateTime(2024, 3, 30, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7939),
+                            PriorityId = 3,
+                            ProductId = 1,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "NEW",
+                            RaisedDate = new DateTime(2024, 3, 29, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7939),
+                            Status = "CLOSED",
                             Summary = "Sample ticket 52"
                         },
                         new
@@ -907,37 +942,39 @@ namespace Infrastructure.Data.migration
                             Id = 52,
                             CategoryId = 3,
                             Description = "Description for ticket 53",
-                            ExpectedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PriorityId = 1,
-                            ProductId = 1,
+                            ExpectedDate = new DateTime(2024, 2, 25, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7953),
+                            PriorityId = 3,
+                            ProductId = 3,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "NEW",
+                            RaisedDate = new DateTime(2024, 2, 18, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7953),
+                            Status = "OPEN",
                             Summary = "Sample ticket 53"
                         },
                         new
                         {
                             Id = 53,
-                            CategoryId = 2,
+                            CategoryId = 1,
                             Description = "Description for ticket 54",
-                            ExpectedDate = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ExpectedDate = new DateTime(2024, 6, 1, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7966),
                             PriorityId = 1,
                             ProductId = 2,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RaisedDate = new DateTime(2024, 5, 31, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7966),
                             Status = "OPEN",
                             Summary = "Sample ticket 54"
                         },
                         new
                         {
                             Id = 54,
-                            CategoryId = 1,
+                            CategoryId = 3,
+                            ClosedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
+                            ClosedDate = new DateTime(2024, 4, 23, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7978),
                             Description = "Description for ticket 55",
-                            ExpectedDate = new DateTime(2024, 9, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PriorityId = 2,
+                            ExpectedDate = new DateTime(2024, 4, 23, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7978),
+                            PriorityId = 1,
                             ProductId = 2,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RaisedDate = new DateTime(2024, 4, 16, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7978),
                             Status = "CLOSED",
                             Summary = "Sample ticket 55"
                         },
@@ -946,38 +983,40 @@ namespace Infrastructure.Data.migration
                             Id = 55,
                             CategoryId = 2,
                             Description = "Description for ticket 56",
-                            ExpectedDate = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ExpectedDate = new DateTime(2024, 7, 21, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7991),
                             PriorityId = 2,
                             ProductId = 2,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            RaisedDate = new DateTime(2024, 7, 14, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(7991),
                             Status = "NEW",
                             Summary = "Sample ticket 56"
                         },
                         new
                         {
                             Id = 56,
-                            CategoryId = 1,
+                            CategoryId = 2,
                             Description = "Description for ticket 57",
-                            ExpectedDate = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PriorityId = 1,
-                            ProductId = 3,
+                            ExpectedDate = new DateTime(2024, 2, 4, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(8003),
+                            PriorityId = 2,
+                            ProductId = 1,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "CLOSED",
+                            RaisedDate = new DateTime(2024, 1, 21, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(8003),
+                            Status = "NEW",
                             Summary = "Sample ticket 57"
                         },
                         new
                         {
                             Id = 57,
                             CategoryId = 1,
+                            ClosedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
+                            ClosedDate = new DateTime(2024, 6, 5, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(8016),
                             Description = "Description for ticket 58",
-                            ExpectedDate = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ExpectedDate = new DateTime(2024, 6, 5, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(8016),
                             PriorityId = 3,
-                            ProductId = 2,
+                            ProductId = 3,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "NEW",
+                            RaisedDate = new DateTime(2024, 5, 29, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(8016),
+                            Status = "CLOSED",
                             Summary = "Sample ticket 58"
                         },
                         new
@@ -985,38 +1024,42 @@ namespace Infrastructure.Data.migration
                             Id = 58,
                             CategoryId = 2,
                             Description = "Description for ticket 59",
-                            ExpectedDate = new DateTime(2024, 9, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PriorityId = 3,
-                            ProductId = 3,
+                            ExpectedDate = new DateTime(2024, 7, 1, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(8030),
+                            PriorityId = 2,
+                            ProductId = 2,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "CLOSED",
+                            RaisedDate = new DateTime(2024, 6, 30, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(8030),
+                            Status = "NEW",
                             Summary = "Sample ticket 59"
                         },
                         new
                         {
                             Id = 59,
-                            CategoryId = 1,
+                            CategoryId = 3,
+                            ClosedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
+                            ClosedDate = new DateTime(2024, 8, 19, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(8042),
                             Description = "Description for ticket 60",
-                            ExpectedDate = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PriorityId = 1,
-                            ProductId = 3,
+                            ExpectedDate = new DateTime(2024, 8, 19, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(8042),
+                            PriorityId = 3,
+                            ProductId = 1,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "OPEN",
+                            RaisedDate = new DateTime(2024, 8, 18, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(8042),
+                            Status = "CLOSED",
                             Summary = "Sample ticket 60"
                         },
                         new
                         {
                             Id = 60,
-                            CategoryId = 2,
+                            CategoryId = 1,
+                            ClosedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
+                            ClosedDate = new DateTime(2024, 9, 24, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(8083),
                             Description = "Description for ticket 61",
-                            ExpectedDate = new DateTime(2024, 9, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PriorityId = 2,
-                            ProductId = 3,
+                            ExpectedDate = new DateTime(2024, 9, 24, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(8083),
+                            PriorityId = 1,
+                            ProductId = 2,
                             RaisedBy = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
-                            RaisedDate = new DateTime(2024, 9, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Status = "NEW",
+                            RaisedDate = new DateTime(2024, 9, 10, 0, 40, 34, 147, DateTimeKind.Unspecified).AddTicks(8083),
+                            Status = "CLOSED",
                             Summary = "Sample ticket 61"
                         });
                 });
@@ -1044,6 +1087,9 @@ namespace Infrastructure.Data.migration
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("LockoutEnabled")
@@ -1096,15 +1142,16 @@ namespace Infrastructure.Data.migration
                             Id = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
                             AccessFailedCount = 0,
                             AccountConfirmed = false,
-                            ConcurrencyStamp = "0963b03a-0f46-4fd3-ade9-5b5e54338b05",
+                            ConcurrencyStamp = "68426e23-e1a9-4503-98c0-8c4da0318fd3",
                             Email = "test@gmail.com",
                             EmailConfirmed = true,
+                            IsDeleted = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "TEST@GMAIL.COM",
                             NormalizedUserName = "TEST@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEErr/SQbXz+Y70CJ5QMz9gHvZ6JDIgpCtkN35DYIcClDf8iTbjVannAX55bG62mZVQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAENVX4RctH0ZiTK7BL4MAxK5830/KnzjxJaHnXJB1jMSWe+G4n02FifkqoT85YgSLsA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "8b0a2dcb-59e2-4a26-8c41-5895c8c3f57d",
+                            SecurityStamp = "3ebc74dd-b69e-4eff-965c-757f4c5fbef6",
                             TwoFactorEnabled = false,
                             UserName = "test@gmail.com"
                         });
@@ -1134,6 +1181,20 @@ namespace Infrastructure.Data.migration
                         .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "48395b9b-a292-4a48-80df-ebc6a057f6c0",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "6367a40d-3014-43bc-a704-135f41abae2d",
+                            Name = "User",
+                            NormalizedName = "USER"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1217,6 +1278,13 @@ namespace Infrastructure.Data.migration
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "c5e57a7f-39e8-4007-940e-4468dfbb04f3",
+                            RoleId = "48395b9b-a292-4a48-80df-ebc6a057f6c0"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -1242,15 +1310,11 @@ namespace Infrastructure.Data.migration
                 {
                     b.HasOne("Domain.Entities.Discussion", "Discussion")
                         .WithMany("Attachments")
-                        .HasForeignKey("DiscussionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DiscussionId");
 
                     b.HasOne("Domain.Entities.Ticket", "Ticket")
                         .WithMany("Attachments")
-                        .HasForeignKey("TicketId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TicketId");
 
                     b.Navigation("Discussion");
 

@@ -102,11 +102,11 @@
                         </MudPaper>
                     </MudItem>
                 }
-                <MudButton @onclick="CreateTicket" Variant="Variant.Filled"
+                <MudButton @onclick="CreateTicketAsync" Variant="Variant.Filled"
                            FullWidth="true"
                            EndIcon="@Icons.Material.Filled.Save"
                            Color="Color.Primary">
-                    CreateDiscussionAsync Ticket
+                    Create Ticket
                 </MudButton>
                 <Select @ref="m_ProductDdl" elements="@m_Products" label="Product"></Select>
                 <Select @ref="m_CategoryDdl" elements="@m_Categories" label="Category"></Select>
@@ -174,7 +174,7 @@
         }
     }
 
-    private async Task CreateTicket()
+    private async Task CreateTicketAsync()
     {
         var request = new CreateTicketRequest
         {
