@@ -4,13 +4,10 @@
 <SectionContent SectionName="page-title">Ticket Management</SectionContent>
 
 @attribute [Authorize]
-@rendermode InteractiveServer
 @inject ITicketService TicketService
 @inject ICriteriaService CriteriaService
 @inject IAccountService AccountService
 @inject NavigationManager NavigationManager
-<MudPopoverProvider/>
-
 
 <div class="filter-panel">
     <MudGrid>

@@ -3,15 +3,9 @@
 @using Microsoft.AspNetCore.Authorization
 @attribute [Authorize]
 
-@rendermode InteractiveServer
-
 @inject ITicketService TicketService
-
-
 <PageTitle>Home</PageTitle>
 <SectionContent SectionName="page-title">Dashboard</SectionContent>
-<MudPopoverProvider />
-
 
 <div class="container mt-3">
 	<div class="row">
