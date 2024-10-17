@@ -6,7 +6,7 @@ public class RegisterUserRequest
 {
     #region Public properties declaration
 
-    [Required] public string? Email { get; set; }
+    [Required] [EmailAddress] public string? Email { get; set; }
     [Required] public string? Role { get; set; }
 
     #endregion
