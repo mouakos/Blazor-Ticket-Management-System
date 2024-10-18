@@ -1,5 +1,6 @@
 ﻿@page "/login"
 @using System.ComponentModel.DataAnnotations
+@using System.Text.RegularExpressions
 @using Domain.Entities
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @using Microsoft.AspNetCore.Identity
@@ -23,26 +24,17 @@
                     <p class="lead fw-normal mb-0 me-3">Sign in with Email</p>
                 </div>
                 <Alert @ref="m_Alert"/>
-                <EditForm Model="Input" method="post" FormName="Login" OnValidSubmit="HandleValidSubmit">
+                  <EditForm Model="@m_Input" method="post" FormName="Login" OnValidSubmit="HandleValidSubmit">
                     <DataAnnotationsValidator/>
                     <hr/>
-                    <div class="form-floating mb-3">
-                        <InputText id="email" @bind-Value="Input.Email" class="form-control" area-required="true"/>
-                        <label for="email" class="form-label">Email</label>
-                        <ValidationMessage For="() => Input.Email" class="text-danger"></ValidationMessage>
-                    </div>
-                    <div class="form-floating mb-3">
-                        <InputText id="password" type="password" @bind-Value="Input.Password" class="form-control" area-required="true"/>
-                        <label for="password" class="form-label">Password</label>
-                        <ValidationMessage For="() => Input.Password" class="text-danger"></ValidationMessage>
-                    </div>
-                    <div class="form-floating mb-3">
-                        <InputCheckbox @bind-Value="Input.Remember"/>
-                        Remember me
-                    </div>
-                    <div>
-                        <button type="submit" class="w-100 btn btn-lg btn-primary">Login</button>
-                    </div>
+                    <MudTextField Label="Email" Class="mt-3" Variant="Variant.Outlined"  Required="true"
+                                  @bind-Value="m_Input.Email" For="() => m_Input.Email"/>
+                    <MudTextField Label="Password" Variant="Variant.Outlined" 
+                                  @bind-Value="m_Input.Password" For="() => m_Input.Password" InputType="@m_PasswordInput" Required="true" Adornment="Adornment.End" AdornmentIcon="@m_PasswordInputIcon"
+                                  OnAdornmentClick="TogglePasswordVisibility" Class="mt-3" />
+                    <MudCheckBox @bind-Value="m_Input.Remember" Label="Remember me" Dense="true" Class="mt-3" />
+                    <MudText Class="mt-3">Not a member? To request an account, please contact your administrators.</MudText>
+                    <MudButton Class="mt-3 w-100" ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">Login</MudButton>
                 </EditForm>
             </div>
         </div>
@@ -50,20 +42,21 @@
 </section>
 
 @code {
+
     private Alert? m_Alert;
-    [SupplyParameterFromForm] private LoginInput Input { get; set; } = new();
+    private readonly LoginInput m_Input = new();
 
     private async Task HandleValidSubmit()
     {
         // Hier die Login-Logik implementieren
-        var verify = await AccountService.VerifyUserAsync(Input.Email!, Input.Password!);
+        var verify = await AccountService.VerifyUserAsync(m_Input.Email!, m_Input.Password!);
         if (!verify.IsSuccess)
         {
             m_Alert?.ShowFailed(verify.ErrorMessage!);
             return;
         }
 
-        var loginData = new LoginDto { UserName = verify.Value, Password = Input.Password, RememberMe = Input.Remember };
+        var loginData = new LoginDto { UserName = verify.Value, Password = m_Input.Password, RememberMe = m_Input.Remember };
         var user = await SignInManager.UserManager.FindByEmailAsync(verify.Value);
         await ProtectedSessionStorage.SetAsync("avatar", user.Avatar);
         await ProtectedSessionStorage.SetAsync("email", user.Email);
@@ -82,6 +75,23 @@
         public string? Password { get; set; }
 
         public bool Remember { get; set; }
+    }
+
+    private InputType m_PasswordInput = InputType.Password;
+    private string m_PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+
+    private void TogglePasswordVisibility()
+    {
+        if (m_PasswordInput == InputType.Text)
+        {
+            m_PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            m_PasswordInput = InputType.Password;
+        }
+        else
+        {
+            m_PasswordInputIcon = Icons.Material.Filled.Visibility;
+            m_PasswordInput = InputType.Text;
+        }
     }
 
 }

@@ -50,3 +50,7 @@ main { flex: 1; }
     text-align: right;
     width: 0;
 }
+
+label.mud-checkbox > .mud-icon-button {
+    padding: 0;
+}
