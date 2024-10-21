@@ -35,22 +35,22 @@
     </MudMessageBox>
 </div>
 
-<SectionContent SectionName="page-title">Ticket ID: @m_Ticket.TicketIdView</SectionContent>
+<SectionContent SectionName="page-title">Ticket ID: @m_Ticket?.TicketIdView</SectionContent>
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-10 mt-3 p-3 discussion-panel">
             <div class="ticket-info">
-                <p style="font-size: 25px">@m_Ticket.Summary</p>
+                <p style="font-size: 25px">@m_Ticket?.Summary</p>
 
                 <table class="mt-2">
                     <tr>
                         <td rowspan="2">
-                            <MudImage Src="@Path.Combine("uploads", "avatars", m_Ticket.RaisedByAvatar ?? Constants.c_DefaultAvatar)"
+                            <MudImage Src="@Path.Combine("uploads", "avatars", m_Ticket?.RaisedByAvatar ?? Constants.c_DefaultAvatar)"
                                       Width="50" Height="50" Style="border-radius:5px" />
                         </td>
                         <td>
                             <span class="ms-3">
-                                <strong>@m_Ticket.RaisedByName</strong>
+                                <strong>@m_Ticket?.RaisedByName</strong>
                             </span>
                         </td>
                     </tr>
@@ -58,17 +58,17 @@
                         <td>
 
                             <span class="ms-3">
-                                @m_Ticket.CreatedDate.BeautifyDate()
+                                @m_Ticket?.CreatedDate.BeautifyDate()
                             </span>
                         </td>
                     </tr>
                 </table>
 
                 <div class="mt-4">
-                    @((MarkupString)m_Ticket.Description)
+                    @((MarkupString)(m_Ticket?.Description ?? string.Empty))
                 </div>
 
-                @if (m_Ticket.Attachments.Count > 0)
+                @if (m_Ticket?.Attachments is { Count: > 0 })
                 {
                     <div class="attachment mt-5">
                         <div>
@@ -79,7 +79,7 @@
                                 @foreach (var item in m_Ticket.Attachments)
                                 {
                                     <MudItem>
-                                        <MudButton Download="@item.FileName"
+                                        <MudButton download="@item.FileName"
                                                    Href="@item.ServerFileName"
                                                    Variant="Variant.Outlined"
                                                    StartIcon="@Icons.Material.Filled.CloudDownload"
@@ -94,7 +94,7 @@
                 }
             </div>
             <hr/>
-            <CreateDiscussions TicketId="ticketId" OnNotifyParent="RefreshDiscussionAsync"/>
+            <CreateDiscussions TicketId="TicketId" OnNotifyParent="RefreshDiscussionAsync"/>
             <hr/>
             <ViewDiscussions Discussions="@m_Discussions"/>
         </div>
@@ -121,12 +121,12 @@
                            @onclick="UpdateAsync">
                     Update Ticket
                 </MudButton>
-                <MudTextField T="string" ReadOnly="true" Text="@m_Ticket.ExpectedDate.BeautifyDate()" Label="Expected Completion Date" Variant="Variant.Outlined"></MudTextField>
+                <MudTextField T="string" ReadOnly="true" Text="@m_Ticket?.ExpectedDate.BeautifyDate()" Label="Expected Completion Date" Variant="Variant.Outlined"></MudTextField>
 
                 @if (m_IsClosed)
                 {
-                    <MudTextField T="string" ReadOnly="true" Text="@m_Ticket.ClosedBy" Label="Closed By" Variant="Variant.Outlined"></MudTextField>
-                    <MudTextField T="string" ReadOnly="true" Text="@m_Ticket.ClosedDate.Value.BeautifyDate()" Label="Closed Date" Variant="Variant.Outlined"></MudTextField>
+                    <MudTextField T="string" ReadOnly="true" Text="@m_Ticket?.ClosedBy" Label="Closed By" Variant="Variant.Outlined"></MudTextField>
+                    <MudTextField T="string" ReadOnly="true" Text="@m_Ticket?.ClosedDate?.BeautifyDate()" Label="Closed Date" Variant="Variant.Outlined"></MudTextField>
                 }
                 <Select @ref="m_ProductDdl" Elements="@m_Products" Label="Product"></Select>
                 <Select @ref="m_CategoryDdl" Elements="@m_Categories" Label="Category"></Select>
@@ -139,33 +139,33 @@
 </div>
 
 @code {
-    [Parameter] public int ticketId { get; set; }
+    [Parameter] public int TicketId { get; set; }
 
-    private TicketResponse m_Ticket;
+    private TicketResponse? m_Ticket;
 
-    Select m_ProductDdl;
-    Select m_PriorityDdl;
-    Select m_CategoryDdl;
-    Select m_StatusDdl;
-    Select m_AssignDdl;
+    Select? m_ProductDdl;
+    Select? m_PriorityDdl;
+    Select? m_CategoryDdl;
+    Select? m_StatusDdl;
+    Select? m_AssignDdl;
 
-    private List<SelectItem> m_Products;
-    private List<SelectItem> m_Priorities;
-    private List<SelectItem> m_Categories;
-    private List<SelectItem> m_Status;
-    private List<SelectItem> m_Users;
+    private List<SelectItem>? m_Products;
+    private List<SelectItem>? m_Priorities;
+    private List<SelectItem>? m_Categories;
+    private List<SelectItem>? m_Status;
+    private List<SelectItem>? m_Users;
 
     private bool m_IsClosed;
-    private Alert m_Alert;
+    private Alert? m_Alert;
     private string?[] m_Errors = [];
     private List<DiscussionResponse>? m_Discussions;
     private MudMessageBox? m_MudMessageBox;
 
     protected override async Task OnInitializedAsync()
     {
-        m_Ticket = await TicketService.FindTicketAsync(ticketId);
+        m_Ticket = await TicketService.FindTicketAsync(TicketId);
         await InitializeDropdownAsync();
-        m_Discussions = await DiscussionService.GetDiscussionsAsync(ticketId);
+        m_Discussions = await DiscussionService.GetDiscussionsAsync(TicketId);
     }
 
     protected override void OnAfterRender(bool firstRender)
@@ -178,22 +178,22 @@
 
     private void AssignTicketValue()
     {
-        m_ProductDdl.SelectedValue = m_Ticket.ProductId.ToString();
-        m_PriorityDdl.SelectedValue = m_Ticket.PriorityId.ToString();
-        m_CategoryDdl.SelectedValue = m_Ticket.CategoryId.ToString();
-        m_StatusDdl.SelectedValue = m_Ticket.Status;
+        if (m_ProductDdl != null) m_ProductDdl.SelectedValue = m_Ticket?.ProductId.ToString();
+        if (m_PriorityDdl != null) m_PriorityDdl.SelectedValue = m_Ticket?.PriorityId.ToString();
+        if (m_CategoryDdl != null) m_CategoryDdl.SelectedValue = m_Ticket?.CategoryId.ToString();
+        if (m_StatusDdl != null) m_StatusDdl.SelectedValue = m_Ticket?.Status;
 
-        if (m_Ticket.ExpectedDate < DateTime.Now && m_Ticket.Status != Constants.c_StatusClosed)
+        if (m_Ticket != null && m_Ticket.ExpectedDate < DateTime.Now && m_Ticket.Status != Constants.c_StatusClosed)
         {
-            m_Alert.ShowFailed("This ticket is overdue!");
+            m_Alert?.ShowFailed("This ticket is overdue!");
         }
 
-        if (m_Ticket.AssignedToId != null)
+        if (m_Ticket?.AssignedToId != null)
         {
-            m_AssignDdl.SelectedValue = m_Ticket.AssignedToId;
+            if (m_AssignDdl != null) m_AssignDdl.SelectedValue = m_Ticket.AssignedToId;
         }
 
-        if (m_Ticket.Status == Constants.c_StatusClosed)
+        if (m_Ticket?.Status == Constants.c_StatusClosed)
             m_IsClosed = true;
 
         StateHasChanged();
@@ -227,54 +227,58 @@
 
     private async Task CloseTicketAsync()
     {
-        m_StatusDdl.SelectedValue = Constants.c_StatusClosed;
+        if (m_StatusDdl != null) m_StatusDdl.SelectedValue = Constants.c_StatusClosed;
         await UpdateAsync();
     }
 
     private async Task UpdateAsync()
     {
-        var request = new UpdateTicketRequest
+        if (m_Ticket != null)
         {
-            TicketId = m_Ticket.TicketId,
-            ProductId = m_ProductDdl.SelectedValue.ToNullableInteger(),
-            CategoryId = m_CategoryDdl.SelectedValue.ToNullableInteger(),
-            PriorityId = m_PriorityDdl.SelectedValue.ToNullableInteger(),
-            AssignedToId = m_AssignDdl.SelectedValue,
-            Status = m_StatusDdl.SelectedValue
-        };
-
-        var validationHelper = new ValidationHelpers(request);
-        var isValid = validationHelper.Validate();
-        m_Errors = validationHelper.ValidationResults.Select(x => x.ErrorMessage).ToArray();
-
-        if (isValid)
-        {
-            var result = await TicketService.UpdateTicketAsync(request);
-            if (result.IsSuccess)
+            var request = new UpdateTicketRequest
             {
-                m_Alert.ShowSuccess("Successfully update the ticket!");
-                m_Ticket = await TicketService.FindTicketAsync(ticketId);
-                AssignTicketValue();
-            }
-            else
+                TicketId = m_Ticket.TicketId,
+                ProductId = m_ProductDdl?.SelectedValue?.ToNullableInteger(),
+                CategoryId = m_CategoryDdl?.SelectedValue?.ToNullableInteger(),
+                PriorityId = m_PriorityDdl?.SelectedValue?.ToNullableInteger(),
+                AssignedToId = m_AssignDdl?.SelectedValue,
+                Status = m_StatusDdl?.SelectedValue
+            };
+
+            var validationHelper = new ValidationHelpers(request);
+            var isValid = validationHelper.Validate();
+            m_Errors = validationHelper.ValidationResults.Select(x => x.ErrorMessage).ToArray();
+
+            if (isValid)
             {
-                m_Alert.ShowFailed(result.ErrorMessage);
+                var result = await TicketService.UpdateTicketAsync(request);
+                if (result.IsSuccess)
+                {
+                    m_Alert?.ShowSuccess("Successfully update the ticket!");
+                    m_Ticket = await TicketService.FindTicketAsync(TicketId);
+                    AssignTicketValue();
+                }
+                else
+                {
+                    m_Alert?.ShowFailed(result.ErrorMessage);
+                }
             }
         }
     }
 
     private async Task RefreshDiscussionAsync()
     {
-        m_Discussions = await DiscussionService.GetDiscussionsAsync(ticketId);
+        m_Discussions = await DiscussionService.GetDiscussionsAsync(TicketId);
         StateHasChanged();
     }
 
     private async Task DeleteTicketAsync()
     {
+        if (m_MudMessageBox is null) return;
         var result = await m_MudMessageBox.ShowAsync();
         if (result is true)
         {
-            var response = await TicketService.DeleteTicketAsync(ticketId);
+            var response = await TicketService.DeleteTicketAsync(TicketId);
             if (response.IsSuccess)
             {
                 Snackbar.Add("Delete ticket Success!", Severity.Success);

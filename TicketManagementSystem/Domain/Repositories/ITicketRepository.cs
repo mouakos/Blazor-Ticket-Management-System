@@ -12,7 +12,7 @@ public interface ITicketRepository : IGenericRepository<Ticket>
     Task<List<ChartResponse>> GetSummaryAsync();
     Task<Ticket?> FindTicketAsync(int ticketId);
     Task<List<Ticket>> GetTicketsAsync(TicketRequest? request);
-    Task<List<ChartResponse>> GetLast12MonthTicketsAsync();
+    Task<List<ChartResponse>?> GetLast12MonthTicketsAsync();
 
     #endregion
 }

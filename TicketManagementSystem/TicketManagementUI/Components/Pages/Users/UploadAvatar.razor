@@ -11,8 +11,8 @@
 
 <SectionContent SectionName="page-title">User Profile</SectionContent>
 
-<MudGrid Class="mt-5" Justify="Justify.Center" AlignItems="AlignItems.Center">
-    <MudCard Width="500px">
+<MudGrid Class="mt-5 align-items-center" Justify="Justify.Center">
+    <MudCard Style="width: 500px">
         <MudCardContent>
             <MudGrid>
                 <MudItem sm="3">
@@ -70,10 +70,15 @@
 
     private async void UploadFiles(IBrowserFile? file)
     {
+        if (file == null) return;
+        
         var uploadResult = await AccountService.UploadAvatarAsync(file);
         if (!uploadResult.IsSuccess) return;
+        if (uploadResult.Value == null) return;
+        
         m_AvatarSource = Path.Combine(c_AvatarPath, uploadResult.Value);
         await ProtectedSessionStore.SetAsync("avatar", uploadResult.Value);
+
         StateHasChanged();
     }
 

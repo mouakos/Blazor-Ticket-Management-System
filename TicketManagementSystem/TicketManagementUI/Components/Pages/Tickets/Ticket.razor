@@ -37,11 +37,11 @@
             </MultiSelect>
         </MudItem>
         <MudItem>
-            <MultiSelect @ref="m_RaisedbyDdl" elements="@m_Raisedby" label="Raised By">
+            <MultiSelect @ref="m_RaisedByDdl" elements="@m_RaisedBy" label="Raised By">
             </MultiSelect>
         </MudItem>
         <MudItem class="d-flex align-center flex-grow-1 gap-3">
-            <MudButton Variant="Variant.Filled" @onclick="() => m_DataGrid.ReloadServerData()" Color="Color.Primary">
+            <MudButton Variant="Variant.Filled" @onclick="() => m_DataGrid?.ReloadServerData()?? Task.CompletedTask" Color="Color.Primary">
                 <MudText>Search</MudText>
             </MudButton>
             <MudButton Variant="Variant.Filled" @onclick="Reset" Color="Color.Dark">
@@ -77,20 +77,20 @@
 
     [SupplyParameterFromQuery] public string? FilterStatus { get; set; }
 
-    MudDataGrid<TicketResponse> m_DataGrid;
-    MultiSelect m_ProductDdl;
-    MultiSelect m_PriorityDdl;
-    MultiSelect m_CategoryDdl;
-    MultiSelect m_StatusDdl;
-    MultiSelect m_RaisedbyDdl;
+    MudDataGrid<TicketResponse>? m_DataGrid;
+    MultiSelect? m_ProductDdl;
+    MultiSelect? m_PriorityDdl;
+    MultiSelect? m_CategoryDdl;
+    MultiSelect? m_StatusDdl;
+    MultiSelect? m_RaisedByDdl;
 
-    public string Summary { get; set; }
+    public string? Summary { get; set; }
 
-    private List<SelectItem> m_Products;
-    private List<SelectItem> m_Priorities;
-    private List<SelectItem> m_Categories;
-    private List<SelectItem> m_Status;
-    private List<SelectItem> m_Raisedby;
+    private List<SelectItem>? m_Products;
+    private List<SelectItem>? m_Priorities;
+    private List<SelectItem>? m_Categories;
+    private List<SelectItem>? m_Status;
+    private List<SelectItem>? m_RaisedBy;
 
     protected  override async Task OnInitializedAsync()
     {
@@ -115,14 +115,14 @@
 
         m_Status = (await CriteriaService.GetStatusAsync()).Select(x => new SelectItem { Value = x, Text = x }).ToList();
 
-        m_Raisedby = (await AccountService.GetUsersAsync()).Select(x => new SelectItem { Value = x.Id, Text = x.Email }).ToList();
+        m_RaisedBy = (await AccountService.GetUsersAsync()).Select(x => new SelectItem { Value = x.Id, Text = x.Email }).ToList();
     }
 
     private async Task<GridData<TicketResponse>> ServerReload(GridState<TicketResponse> state)
     {
         if (FilterStatus != null)
         {
-            m_StatusDdl.Options = new[] { FilterStatus };
+            if (m_StatusDdl != null) m_StatusDdl.Options = new[] { FilterStatus };
             FilterStatus = null;
             StateHasChanged();
         }
@@ -130,11 +130,11 @@
         IEnumerable<TicketResponse> getTickets = await TicketService.GetTicketsAsync(new TicketRequest
         {
             Summary = Summary,
-            ProductId = m_ProductDdl.Options.Select(int.Parse).ToArray(),
-            CategoryId = m_CategoryDdl.Options.Select(int.Parse).ToArray(),
-            PriorityId = m_PriorityDdl.Options.Select(int.Parse).ToArray(),
-            Status = m_StatusDdl.Options.ToArray(),
-            RaisedBy = m_RaisedbyDdl.Options.ToArray()
+            ProductId = m_ProductDdl?.Options.Select(int.Parse).ToArray(),
+            CategoryId = m_CategoryDdl?.Options.Select(int.Parse).ToArray(),
+            PriorityId = m_PriorityDdl?.Options.Select(int.Parse).ToArray(),
+            Status = m_StatusDdl?.Options.ToArray(),
+            RaisedBy = m_RaisedByDdl?.Options.ToArray()
         });
 
         await Task.Delay(300);
@@ -151,14 +151,13 @@
 
     private Task Reset()
     {
-        m_ProductDdl.Clear();
-        m_CategoryDdl.Clear();
-        m_PriorityDdl.Clear();
-        m_StatusDdl.Clear();
-        m_RaisedbyDdl.Clear();
+        m_ProductDdl?.Clear();
+        m_CategoryDdl?.Clear();
+        m_PriorityDdl?.Clear();
+        m_StatusDdl?.Clear();
+        m_RaisedByDdl?.Clear();
         Summary = string.Empty;
-
-        return m_DataGrid.ReloadServerData();
+        return m_DataGrid != null ? m_DataGrid.ReloadServerData() : Task.CompletedTask;
     }
 
     private void RowClicked(DataGridRowClickEventArgs<TicketResponse> obj)

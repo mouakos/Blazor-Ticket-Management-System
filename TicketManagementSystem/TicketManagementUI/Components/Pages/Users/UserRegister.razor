@@ -29,24 +29,24 @@
             <MudTextField @bind-Value="@Email" Variant="Variant.Outlined" Label="Email"/>
         </div>
         <div class="mt-2">
-            <Select @ref="RoleDDL" elements="@m_Roles" placeholder="Role"></Select>
+            <Select @ref="RoleDdl" elements="@m_Roles" placeholder="Role"></Select>
         </div>
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="@(() => MudDialog.Cancel())">Cancel</MudButton>
+        <MudButton OnClick="@(() => MudDialog?.Cancel())">Cancel</MudButton>
         <MudButton Color="Color.Success" OnClick="@(() => RegisterUserAsync())">Register New User</MudButton>
     </DialogActions>
 </MudDialog>
 
 
 @code {
-    private Alert m_Alert;
+    private Alert? m_Alert;
     string?[] m_Errors = [];
 
-    [CascadingParameter] private MudDialogInstance MudDialog { get; set; }
+    [CascadingParameter] private MudDialogInstance? MudDialog { get; set; }
 
-    public string Email { get; set; }
-    public Select RoleDDL { get; set; }
+    public string? Email { get; set; }
+    public Select? RoleDdl { get; set; }
     readonly List<SelectItem> m_Roles = Constants.UserRoles.Select(x => new SelectItem { Text = x.Value, Value = x.Value }).ToList();
 
     private async Task RegisterUserAsync()
@@ -54,7 +54,7 @@
         var request = new RegisterUserRequest
         {
             Email = Email,
-            Role = RoleDDL.SelectedValue
+            Role = RoleDdl?.SelectedValue
         };
 
         var validationHelper = new ValidationHelpers(request);
@@ -67,11 +67,11 @@
             if (result.IsSuccess)
             {
                 Snackbar.Add("Register User Success!", Severity.Success);
-                MudDialog.Close();
+                MudDialog?.Close();
             }
             else
             {
-                m_Alert.ShowFailed(result.ErrorMessage);
+                m_Alert?.ShowFailed(result.ErrorMessage);
             }
         }
     }

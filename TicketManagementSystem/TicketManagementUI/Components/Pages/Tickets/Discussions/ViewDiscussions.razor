@@ -11,7 +11,7 @@
                 <tr>
                     <td rowspan="2">
                         <MudImage Src="@(Path.Combine("uploads", "avatars", discussionResponse.User?.Avatar ?? Constants.c_DefaultAvatar))"
-                                  Width="50" Height="50" Elevation="25" Style="border-radius: 5px"/>
+                                  Width="50" Height="50" Elevation="25" Style="-ms-border-radius: 5px; border-radius: 5px"/>
                     </td>
                     <td>
                         <span class="ms-3">
@@ -28,7 +28,10 @@
                 </tr>
             </table>
             <div class="mt-4">
-                @((MarkupString)discussionResponse.Message)
+                @if (discussionResponse.Message != null)
+                {
+                    @((MarkupString)discussionResponse.Message)
+                }
             </div>
             @if (discussionResponse.Attachments?.Count > 0)
             {
@@ -41,7 +44,7 @@
                             @foreach (var attachmentResponse in discussionResponse.Attachments)
                             {
                                 <MudItem>
-                                    <MudButton Download="@attachmentResponse.FileName"
+                                    <MudButton download="@attachmentResponse.FileName"
                                                Href="@attachmentResponse.ServerFileName"
                                                Variant="Variant.Outlined"
                                                StartIcon="@Icons.Material.Filled.CloudDownload"

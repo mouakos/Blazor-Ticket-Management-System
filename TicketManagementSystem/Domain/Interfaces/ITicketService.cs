@@ -14,7 +14,7 @@ public interface ITicketService
     Task<List<ChartResponse>> GetSummaryAsync();
     Task<List<TicketResponse>> GetTicketsAsync(TicketRequest? request = null);
     Task<BaseResponse> DeleteTicketAsync(int ticketId);
-    Task<List<ChartResponse>> GetLast12MonthTicketsAsync();
+    Task<List<ChartResponse>?> GetLast12MonthTicketsAsync();
     Task<BaseResponse> UpdateTicketAsync(UpdateTicketRequest request);
 
     #endregion

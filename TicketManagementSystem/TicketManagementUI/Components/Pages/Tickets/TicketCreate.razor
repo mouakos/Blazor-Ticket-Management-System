@@ -11,7 +11,7 @@
 @inject ITicketService TicketService
 @inject NavigationManager Nav
 
-<SectionContent SectionName="page-title">CreateDiscussionAsync a New Ticket</SectionContent>
+<SectionContent SectionName="page-title">Create a New Ticket</SectionContent>
 
 <div class="head-panel">
     <MudButton StartIcon="@Icons.Material.Filled.ArrowBack" @onclick="BackToTicketList" Variant="Variant.Filled" Color="Color.Primary">
@@ -118,21 +118,21 @@
 </div>
 
 @code {
-    private Alert m_Alert;
-    string[] m_Errors = [];
+    private Alert? m_Alert;
+    string?[] m_Errors = [];
 
-    MudTextField<string> m_Summary;
-    MudExRichTextEdit m_DescriptionEditor;
+    MudTextField<string>? m_Summary;
+    MudExRichTextEdit? m_DescriptionEditor;
 
-    Select m_ProductDdl;
-    Select m_PriorityDdl;
-    Select m_CategoryDdl;
-    Select m_AssignDdl;
+    Select? m_ProductDdl;
+    Select? m_PriorityDdl;
+    Select? m_CategoryDdl;
+    Select? m_AssignDdl;
 
-    private List<SelectItem> m_Products;
-    private List<SelectItem> m_Priorities;
-    private List<SelectItem> m_Categories;
-    private List<SelectItem> m_Users;
+    private List<SelectItem>? m_Products;
+    private List<SelectItem>? m_Priorities;
+    private List<SelectItem>? m_Categories;
+    private List<SelectItem>? m_Users;
 
     private readonly IList<IBrowserFile> m_Files = new List<IBrowserFile>();
 
@@ -168,6 +168,7 @@
 
     private void UploadFiles(IReadOnlyList<IBrowserFile>? files)
     {
+        if (files == null) return;
         foreach (var file in files)
         {
             m_Files.Add(file);
@@ -178,12 +179,12 @@
     {
         var request = new CreateTicketRequest
         {
-            Summary = m_Summary.Text,
-            Description = m_DescriptionEditor.Value,
-            ProductId = m_ProductDdl.SelectedValue.ToNullableInteger(),
-            CategoryId = m_CategoryDdl.SelectedValue.ToNullableInteger(),
-            PriorityId = m_PriorityDdl.SelectedValue.ToNullableInteger(),
-            AssignedToId = m_AssignDdl.SelectedValue,
+            Summary = m_Summary?.Text,
+            Description = m_DescriptionEditor?.Value,
+            ProductId = m_ProductDdl?.SelectedValue?.ToNullableInteger(),
+            CategoryId = m_CategoryDdl?.SelectedValue?.ToNullableInteger(),
+            PriorityId = m_PriorityDdl?.SelectedValue?.ToNullableInteger(),
+            AssignedToId = m_AssignDdl?.SelectedValue,
             Files = m_Files
         };
 
@@ -200,7 +201,7 @@
             }
             else
             {
-                m_Alert.ShowFailed(createTicketResult.ErrorMessage);
+                m_Alert?.ShowFailed(createTicketResult.ErrorMessage);
             }
         }
     }

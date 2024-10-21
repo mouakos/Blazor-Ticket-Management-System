@@ -88,7 +88,8 @@
 
     private async Task ReplyClicked()
     {
-        var message = await m_DescriptionEditor?.GetText();
+        if(m_DescriptionEditor is null) return;
+        var message = await m_DescriptionEditor.GetText();
         message = message.Trim();
 
         if (string.IsNullOrEmpty(message))

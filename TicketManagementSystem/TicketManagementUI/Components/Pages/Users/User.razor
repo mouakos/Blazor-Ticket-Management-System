@@ -50,7 +50,7 @@
 </MudDataGrid>
 
 @code {
-    MudDataGrid<UserResponse> m_DataGrid;
+    MudDataGrid<UserResponse>? m_DataGrid;
 
     private async Task<GridData<UserResponse>> ServerReload(GridState<UserResponse> state)
     {
@@ -79,7 +79,8 @@
 
         if (result is { Canceled: false })
         {
-            await m_DataGrid.ReloadServerData();
+            if(m_DataGrid is not null)
+                await m_DataGrid.ReloadServerData();
         }
     }
 
@@ -88,15 +89,19 @@
         var confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Are you sure want to remove this user?");
         if (confirmed)
         {
-            var result = await AccountService.RemoveUserAsync(user.Item.Email);
-            if (result.IsSuccess)
+            if (user.Item.Email != null)
             {
-                SnackBar.Add("Successfully remove user", Severity.Success);
-                await m_DataGrid.ReloadServerData();
-            }
-            else
-            {
-                SnackBar.Add("Failed remove user: " + result.ErrorMessage, Severity.Error);
+                var result = await AccountService.RemoveUserAsync(user.Item.Email);
+                if (result.IsSuccess)
+                {
+                    SnackBar.Add("Successfully remove user", Severity.Success);
+                    if(m_DataGrid is not null)
+                        await m_DataGrid.ReloadServerData();
+                }
+                else
+                {
+                    SnackBar.Add("Failed remove user: " + result.ErrorMessage, Severity.Error);
+                }
             }
         }
     }

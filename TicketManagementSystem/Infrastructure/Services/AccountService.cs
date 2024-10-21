@@ -35,6 +35,9 @@ public class AccountService(
             return response;
         }
 
+        if (user.Value == null) return response;
+        if (request.CurrentPassword == null) return response;
+        if (request.NewPassword == null) return response;
         var changePasswordResult =
             await signInManager.UserManager.ChangePasswordAsync(user.Value, request.CurrentPassword,
                 request.NewPassword);
@@ -47,7 +50,7 @@ public class AccountService(
         }
         else
         {
-            response.ErrorMessage = changePasswordResult.Errors.FirstOrDefault()?.Description;
+            response.ErrorMessage = changePasswordResult.Errors.FirstOrDefault()?.Description ?? string.Empty;
         }
 
         return response;
@@ -113,9 +116,9 @@ public class AccountService(
             return new BaseResponse
             {
                 IsSuccess = false,
-                ErrorMessage = result.Errors.FirstOrDefault()?.Description
+                ErrorMessage = result.Errors.FirstOrDefault()?.Description ?? string.Empty
             };
-        await signInManager.UserManager.AddToRoleAsync(user, request.Role);
+        if (request.Role != null) await signInManager.UserManager.AddToRoleAsync(user, request.Role);
 
         return new BaseResponse
         {
@@ -142,7 +145,7 @@ public class AccountService(
         var result = await signInManager.UserManager.UpdateAsync(user);
         if (!result.Succeeded)
         {
-            response.ErrorMessage = result.Errors.FirstOrDefault()?.Description;
+            response.ErrorMessage = result.Errors.FirstOrDefault()?.Description ?? string.Empty;
             return response;
         }
 
@@ -175,12 +178,13 @@ public class AccountService(
             if (File.Exists(previousAvatar)) File.Delete(previousAvatar);
         }
 
+        if (currentUser.Value == null) return response;
         currentUser.Value.Avatar = Constants.c_DefaultAvatar;
         var updateResult = await signInManager.UserManager.UpdateAsync(currentUser.Value);
         if (updateResult.Succeeded)
             response.IsSuccess = true;
         else
-            response.ErrorMessage = updateResult.Errors.FirstOrDefault()?.Description;
+            response.ErrorMessage = updateResult.Errors.FirstOrDefault()?.Description ?? string.Empty;
 
         return response;
     }
@@ -202,7 +206,6 @@ public class AccountService(
             return response;
         }
 
-        if (image == null) return response;
         if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
 
         if (currentUser.Value?.Avatar != null && currentUser.Value.Avatar != Constants.c_DefaultAvatar)
@@ -222,6 +225,7 @@ public class AccountService(
             await image.OpenReadStream().CopyToAsync(fileStream);
         }
 
+        if (currentUser.Value == null) return response;
         currentUser.Value.Avatar = fileName;
 
         var updateResult = await signInManager.UserManager.UpdateAsync(currentUser.Value);
@@ -232,7 +236,7 @@ public class AccountService(
         }
         else
         {
-            response.ErrorMessage = updateResult.Errors.FirstOrDefault()?.Description;
+            response.ErrorMessage = updateResult.Errors.FirstOrDefault()?.Description ?? string.Empty;
         }
 
         return response;

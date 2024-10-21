@@ -18,14 +18,23 @@ Sign In ...
     /// <inheritdoc />
     protected override async Task OnInitializedAsync()
     {
-        var loginDto = Encryption.Decode(Payload);
-
-        var user = await SignInManager.UserManager.FindByEmailAsync(loginDto.UserName);
-        var result = await SignInManager.PasswordSignInAsync(loginDto.UserName, loginDto.Password, loginDto.RememberMe, false);
-
-        if (result.Succeeded)
+        if (Payload != null)
         {
-            NavigationManager.NavigateTo(user.AccountConfirmed ? "/" : "/changepassword");
+            var loginDto = Encryption.Decode(Payload);
+
+            if (loginDto?.UserName != null)
+            {
+                var user = await SignInManager.UserManager.FindByEmailAsync(loginDto.UserName);
+                if (loginDto.Password != null)
+                {
+                    var result = await SignInManager.PasswordSignInAsync(loginDto.UserName, loginDto.Password, loginDto.RememberMe, false);
+
+                    if (result.Succeeded)
+                    {
+                        NavigationManager.NavigateTo(user is { AccountConfirmed: true } ? "/" : "/changepassword");
+                    }
+                }
+            }
         }
     }
 

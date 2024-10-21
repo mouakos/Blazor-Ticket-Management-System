@@ -1,5 +1,6 @@
 ﻿.discussion {
     background-color: #e1f0f1;
+    -ms-border-radius: 15px;
     border-radius: 15px;
     padding: 20px;
 }

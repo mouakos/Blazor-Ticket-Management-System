@@ -91,7 +91,7 @@ public class DiscussionService(
             Attachments = x.Attachments?.Select(a => new AttachmentResponse
             {
                 FileName = a.FileName,
-                ServerFileName = Path.Combine(uploadPath, a.ServerFileName)
+                ServerFileName = a.ServerFileName is not null ? Path.Combine(uploadPath, a.ServerFileName) : null
             }).ToList()
         }).ToList();
     }

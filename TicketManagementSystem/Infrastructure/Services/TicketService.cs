@@ -40,6 +40,9 @@ public class TicketService(
                 return createTicketResult;
             }
 
+            if (request.ProductId == null) return createTicketResult;
+            if (request.CategoryId == null) return createTicketResult;
+            if (request.PriorityId == null) return createTicketResult;
             var ticket = new Ticket
             {
                 Summary = request.Summary,
@@ -131,7 +134,7 @@ public class TicketService(
             Attachments = ticket.Attachments?.Select(x => new AttachmentResponse
             {
                 FileName = x.FileName,
-                ServerFileName = Path.Combine(attachmentPath, x.ServerFileName)
+                ServerFileName = x.ServerFileName is not null ? Path.Combine(attachmentPath, x.ServerFileName) : null
             }).ToList()
         };
     }
@@ -196,7 +199,7 @@ public class TicketService(
     }
 
     /// <inheritdoc />
-    public async Task<List<ChartResponse>> GetLast12MonthTicketsAsync()
+    public async Task<List<ChartResponse>?> GetLast12MonthTicketsAsync()
     {
         return await unitOfWork.TicketRepository.GetLast12MonthTicketsAsync();
     }
@@ -212,9 +215,9 @@ public class TicketService(
             return baseResponse;
         }
 
-        currentTicket.ProductId = request.ProductId.Value;
-        currentTicket.CategoryId = request.CategoryId.Value;
-        currentTicket.PriorityId = request.PriorityId.Value;
+        if (request.ProductId != null) currentTicket.ProductId = request.ProductId.Value;
+        if (request.CategoryId != null) currentTicket.CategoryId = request.CategoryId.Value;
+        if (request.PriorityId != null) currentTicket.PriorityId = request.PriorityId.Value;
         currentTicket.AssignedToId = request.AssignedToId;
 
         currentTicket.Status = request.Status;

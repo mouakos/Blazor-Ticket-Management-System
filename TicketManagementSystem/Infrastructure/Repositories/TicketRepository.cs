@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Infrastructure.Repositories;
 
 public class TicketRepository(AppDbContext appDbContext)
-    : GenericRepository<Ticket>(appDbContext), ITicketRepository
+    : GenericRepository<Ticket>(appDbContext: appDbContext), ITicketRepository
 {
     #region Private fields declaration
 
@@ -27,16 +27,16 @@ public class TicketRepository(AppDbContext appDbContext)
         switch (category)
         {
             case "category":
-                data = m_AppDbContext.Set<Ticket>().Include(x => x.Category).GroupBy(x => x.Category.Name);
+                data = m_AppDbContext.Set<Ticket>().Include(x => x.Category).GroupBy(x => x.Category!.Name)!;
                 break;
             case "product":
-                data = m_AppDbContext.Set<Ticket>().Include(x => x.Product).GroupBy(x => x.Product.Name);
+                data = m_AppDbContext.Set<Ticket>().Include(x => x.Product).GroupBy(x => x.Product!.Name)!;
                 break;
             case "priority":
-                data = m_AppDbContext.Set<Ticket>().Include(x => x.Priority).GroupBy(x => x.Priority.Name);
+                data = m_AppDbContext.Set<Ticket>().Include(x => x.Priority).GroupBy(x => x.Priority!.Name)!;
                 break;
             default:
-                return null;
+                return [];
         }
 
         return await data.Select(x => new ChartResponse
@@ -61,7 +61,7 @@ public class TicketRepository(AppDbContext appDbContext)
     /// <inheritdoc />
     public async Task<Ticket?> FindTicketAsync(int ticketId)
     {
-        return await appDbContext.Set<Ticket>()
+        return await m_AppDbContext.Set<Ticket>()
             .Include(x => x.User)
             .Include(x => x.Attachments)
             .FirstOrDefaultAsync(x => x.Id == ticketId);
@@ -101,7 +101,7 @@ public class TicketRepository(AppDbContext appDbContext)
     }
 
     /// <inheritdoc />
-    public async Task<List<ChartResponse>> GetLast12MonthTicketsAsync()
+    public async Task<List<ChartResponse>?> GetLast12MonthTicketsAsync()
     {
         var startMonth = DateTime.Now.AddMonths(-11);
 
