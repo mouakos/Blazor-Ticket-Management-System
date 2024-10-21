@@ -243,7 +243,7 @@ public class AccountService(
     {
         var user = await signInManager.UserManager.FindByEmailAsync(email);
         if (user is null || user.IsDeleted)
-            return new BaseResponse<string> { IsSuccess = false, ErrorMessage = "User not found" };
+            return new BaseResponse<string> { IsSuccess = false, ErrorMessage = "Invalid Email / password" };
 
         var result = await signInManager.UserManager.CheckPasswordAsync(user, password);
         return !result
