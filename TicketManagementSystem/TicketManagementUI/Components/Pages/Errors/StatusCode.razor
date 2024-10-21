@@ -1,0 +1,37 @@
+﻿@page "/statuscode/{status:int}"
+@rendermode InteractiveServer
+
+@inject NavigationManager Navigation
+
+<SectionContent SectionName="page-title">@m_Title</SectionContent>
+<MudPaper Class="pa-4" Elevation="4">
+    <MudText Typo="Typo.h3" Color="Color.Error">
+       Sorry
+    </MudText>
+    <MudText Typo="Typo.body1" Class="mb-4">
+        @m_ErrorMessage
+    </MudText>
+    <MudButton Class="mt3" Variant="Variant.Filled" Color="Color.Primary" OnClick="@GoToHome">
+        Go to Home
+    </MudButton>
+</MudPaper>
+
+
+@code {
+    private string? m_Title;
+    private string? m_ErrorMessage;
+
+    /// <inheritdoc />
+    protected override void OnInitialized()
+    {
+        if (Status != 404) return;
+        m_Title = "404-Page Not Found";
+        m_ErrorMessage = "The page you are looking for doesn't exist.";
+    }
+
+    [Parameter] public int Status { get; set; }
+    private void GoToHome()
+    {
+        Navigation.NavigateTo("/");
+    }
+}
