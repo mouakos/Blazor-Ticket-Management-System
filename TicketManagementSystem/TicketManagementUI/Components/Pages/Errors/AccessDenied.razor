@@ -1,0 +1,25 @@
+﻿@page "/access-denied"
+
+@rendermode InteractiveServer
+
+@inject NavigationManager Navigation
+
+<SectionContent SectionName="page-title">Access Denied</SectionContent>
+<MudPaper Class="pa-4">
+    <MudText Typo="Typo.h4" GutterBottom="true" Color="Color.Error">
+        Sorry
+    </MudText>
+    <MudText Typo="Typo.body1">
+        You do not have permission to view this page.
+    </MudText>
+    <MudButton Class="mt-3" Variant="Variant.Filled" Color="Color.Primary" OnClick="@GoToHome">
+        Go to Home
+    </MudButton>
+</MudPaper>
+
+@code {
+    private void GoToHome()
+    {
+        Navigation.NavigateTo("/");
+    }
+}
