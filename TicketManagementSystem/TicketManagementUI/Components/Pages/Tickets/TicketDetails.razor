@@ -164,8 +164,13 @@
     protected override async Task OnInitializedAsync()
     {
         m_Ticket = await TicketService.FindTicketAsync(TicketId);
-        await InitializeDropdownAsync();
-        m_Discussions = await DiscussionService.GetDiscussionsAsync(TicketId);
+        if(m_Ticket == null)
+            Nav.NavigateTo("/statuscode/404");
+        else
+        {
+            await InitializeDropdownAsync();
+            m_Discussions = await DiscussionService.GetDiscussionsAsync(TicketId);
+        }
     }
 
     protected override void OnAfterRender(bool firstRender)
