@@ -1,1 +1,1 @@
-# Blazor Ticket management system
+# Ticket management system
